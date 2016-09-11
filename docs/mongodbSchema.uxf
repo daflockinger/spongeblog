@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>490</x>
+      <y>220</y>
+      <w>180</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>Post
+--
+id: Long
+blogId : Long
+user: User
+created: Date
+modified: Date
+title: String
+content: String
+status: PostStatus
+keywords: List&lt;Link&gt;
+category: Link
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>430</x>
+      <y>490</y>
+      <w>210</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Category
+--
+id: Long
+posts: List&lt;Link&gt;
+parentCategory: Link
+childCategories: List&lt;Link&gt;
+rank: Integer</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>230</x>
+      <y>490</y>
+      <w>110</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>Link
+--
+id: Long
+name: String
+linkId: Long</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>220</x>
+      <y>310</y>
+      <w>140</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>Keyword
+--
+id: Long
+name: String
+posts: List&lt;Link&gt;
+popularity: Integer</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>780</x>
+      <y>50</y>
+      <w>100</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>Setting
+--
+id: Long
+key: String
+value: String
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>40</x>
+      <y>10</y>
+      <w>140</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>Image
+--
+id: Long
+fileName: String
+source: String
+thumbUrl: String
+mobileUrl: String
+desktopUrl: String</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>490</x>
+      <y>50</y>
+      <w>180</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Blog
+--
+id: Long
+name: String
+status: BlogStatus
+userIds: List&lt;User&gt;
+settingIds: List&lt;Setting&gt;
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>220</x>
+      <y>140</y>
+      <w>140</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>User
+--
+id: Long
+login: String
+password: String
+nickname: String
+email: String
+registered: Date
+status: UserStatus</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>660</x>
+      <y>90</y>
+      <w>140</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;120.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>350</x>
+      <y>120</y>
+      <w>160</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2=1..n</panel_attributes>
+    <additional_attributes>140.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>270</x>
+      <y>400</y>
+      <w>50</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>330</x>
+      <y>530</y>
+      <w>120</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=0..n</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>350</x>
+      <y>330</y>
+      <w>160</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.&gt;
+m1=1..n
+m2=1..n</panel_attributes>
+    <additional_attributes>140.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>350</x>
+      <y>250</y>
+      <w>160</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>140.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>560</x>
+      <y>150</y>
+      <w>30</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>540</x>
+      <y>400</y>
+      <w>50</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.&gt;
+m1=0..n
+m2=  1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>330</x>
+      <y>400</y>
+      <w>180</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=0..n</panel_attributes>
+    <additional_attributes>160.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+</diagram>
