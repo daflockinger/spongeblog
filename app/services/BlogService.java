@@ -7,6 +7,6 @@ public class BlogService extends BaseService<Blog, BlogDAO>{
 
 	@Override
 	protected boolean isNotUnique(Blog model) {
-		return false;//TODO implement
+		return dao().exists(dao().createQuery().filter("name", model.getName()));
 	}
 }
