@@ -25,18 +25,7 @@ public class HomeController extends Controller {
      * <code>GET</code> request with a path of <code>/</code>.
      */
     public Result index() {
-    	/*User testUser = new User();
-    	testUser.setNickname("flo");
-    	testUser.setLogin("flo");
-    	testUser.setPassword("flo");
-    	testUser.setEmail("flo@flockinger.com");
-    	testUser.setRegistered(new Date());
-    	userDao.save(testUser);*/
-    	String firstId = userDao.findIds().get(0);
-    	User readuser = userDao.get(firstId);
-    	
-    	
-        return ok("aa" + userDao.count() +  readuser.getNickname() + " v " + readuser.getEmail());
+    	return ok();
     }
 
 }

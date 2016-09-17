@@ -6,12 +6,13 @@ import java.util.List;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.Reference;
 
 @Entity
 public class Post extends BaseModel{
 
-	private Long blogId;
+	private String blog;
 	
 	@Reference
 	private User user;
@@ -28,11 +29,12 @@ public class Post extends BaseModel{
 	@Reference
 	private Category category;
 	
-	public Long getBlogId() {
-		return blogId;
+	
+	public String getBlog() {
+		return blog;
 	}
-	public void setBlogId(Long blogId) {
-		this.blogId = blogId;
+	public void setBlog(String blog) {
+		this.blog = blog;
 	}
 	public User getUser() {
 		return user;
