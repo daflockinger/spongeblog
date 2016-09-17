@@ -8,7 +8,7 @@ import org.mongodb.morphia.annotations.IdGetter;
 @Entity
 public class BaseModel {
 	@Id
-	private ObjectId id ;//= new ObjectId();
+	private ObjectId id ;
 
 	public ObjectId getId() {
 		return id;

@@ -13,7 +13,7 @@ public class Blog extends BaseModel {
 	private String name;
 	private BlogStatus status;
 	
-	@Reference(idOnly=false)
+	@Reference
 	private List<User> users;
 	private Map<String, String> settings;
 
