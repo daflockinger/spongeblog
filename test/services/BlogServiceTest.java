@@ -15,26 +15,21 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import dao.BlogDAO;
-import dao.UserDAO;
 import dto.OperationResult;
 import model.Blog;
 import model.BlogStatus;
-import model.User;
-import model.UserStatus;
 import play.test.WithApplication;
 
 public class BlogServiceTest extends WithApplication {
 
 	private BlogService service;
 	private BlogDAO dao;
-	private UserDAO userDao;
 
 	private Blog testBlog1;
 
 	@Before
 	public void setup() {
 		dao = new BlogDAO();
-		userDao = new UserDAO();
 		service = new BlogService();
 		service.setDao(dao);
 
@@ -42,16 +37,7 @@ public class BlogServiceTest extends WithApplication {
 		testBlog1.setName("Test Blog");
 		testBlog1.setSettings(ImmutableMap.of("setting1", "value1", "setting2", "value2", "setting3", "value3"));
 		testBlog1.setStatus(BlogStatus.ACTIVE);
-
-		User testUser = new User();
-		testUser.setLogin("test");
-		testUser.setEmail("test@testinger.cc");
-		testUser.setNickname("te");
-		testUser.setPassword("1234");
-		testUser.setStatus(UserStatus.ADMIN);
-		userDao.save(testUser);
-
-		testBlog1.setUsers(ImmutableList.of(testUser));
+		testBlog1.setUsers(ImmutableList.of("test"));
 
 		dao.save(testBlog1);
 	}
@@ -68,16 +54,7 @@ public class BlogServiceTest extends WithApplication {
 		testBlog.setName("Test Blog2");
 		testBlog.setSettings(ImmutableMap.of("setting1", "value1", "setting2", "value2", "setting3", "value3"));
 		testBlog.setStatus(BlogStatus.DISABLED);
-
-		User testUser = new User();
-		testUser.setLogin("test2");
-		testUser.setEmail("test2@testinger.cc");
-		testUser.setNickname("te2");
-		testUser.setPassword("4321");
-		testUser.setStatus(UserStatus.AUTHOR);
-		userDao.save(testUser);
-
-		testBlog.setUsers(ImmutableList.of(testUser));
+		testBlog.setUsers(ImmutableList.of("test2"));
 
 		OperationResult<Blog> result = service.create(testBlog);
 		assertEquals(HttpStatus.SC_CREATED, result.getStatus());
@@ -86,7 +63,7 @@ public class BlogServiceTest extends WithApplication {
 		assertNotNull(foundBlog);
 		assertEquals("Test Blog2", foundBlog.getName());
 		assertEquals(BlogStatus.DISABLED, foundBlog.getStatus());
-		assertEquals(testUser.getLogin(), foundBlog.getUsers().get(0).getLogin());
+		assertEquals("test2", foundBlog.getUsers().get(0));
 
 		assertTrue(foundBlog.getSettings().size() == 3);
 	}
@@ -147,8 +124,6 @@ public class BlogServiceTest extends WithApplication {
 
 	@After
 	public void teardown() {
-		userDao.deleteByQuery(userDao.createQuery().filter("login", "test"));
-		userDao.deleteByQuery(userDao.createQuery().filter("login", "test2"));
 		dao.deleteByQuery(dao.createQuery().filter("name", "Test Blog"));
 		dao.deleteByQuery(dao.createQuery().filter("name", "Test Blog2"));
 	}

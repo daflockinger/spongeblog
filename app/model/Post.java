@@ -5,30 +5,40 @@ import java.util.List;
 
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Index;
+import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexes;
+import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 
 @Entity
+@Indexes({
+	// for editing
+	@Index(fields = {@Field(value="blog"), @Field(value="user")}),
+	@Index(fields = {@Field(value="blog"), @Field(value="user"), @Field(value="category")}),
+	@Index(fields = {@Field(value="blog"), @Field(value="user"), @Field(value="status")}),
+	// for view
+	@Index(fields = {@Field(value="blog"), @Field(value="status")}),
+	@Index(fields = {@Field(value="blog"), @Field(value="status"), @Field(value="category")})
+})
 public class Post extends BaseModel{
 
+	@Property
 	private String blog;
-	
-	@Reference
-	private User user;
+	@Property
+	private String user;
 	
 	private Date created;
 	private Date modified;
 	private String title;
 	private String content;
+	@Property
 	private PostStatus status;
-	
-	@Reference
-	private List<Keyword> keywords;
-	
-	@Reference
-	private Category category;
-	
+	private List<String> keywords;
+	@Property
+	private String category;
 	
 	public String getBlog() {
 		return blog;
@@ -36,10 +46,10 @@ public class Post extends BaseModel{
 	public void setBlog(String blog) {
 		this.blog = blog;
 	}
-	public User getUser() {
+	public String getUser() {
 		return user;
 	}
-	public void setUser(User user) {
+	public void setUser(String user) {
 		this.user = user;
 	}
 	public Date getCreated() {
@@ -72,16 +82,16 @@ public class Post extends BaseModel{
 	public void setStatus(PostStatus status) {
 		this.status = status;
 	}
-	public List<Keyword> getKeywords() {
+	public List<String> getKeywords() {
 		return keywords;
 	}
-	public void setKeywords(List<Keyword> keywords) {
+	public void setKeywords(List<String> keywords) {
 		this.keywords = keywords;
 	}
-	public Category getCategory() {
+	public String getCategory() {
 		return category;
 	}
-	public void setCategory(Category category) {
+	public void setCategory(String category) {
 		this.category = category;
 	}
 }

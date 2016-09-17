@@ -3,13 +3,22 @@ package model;
 import java.util.Date;
 
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Index;
+import org.mongodb.morphia.annotations.IndexOptions;
+import org.mongodb.morphia.annotations.Indexes;
+import org.mongodb.morphia.annotations.Property;
 
 import play.data.format.Formats.DateTime;
 
 @Entity
+@Indexes({
+	@Index(fields = @Field(value="login"), options=@IndexOptions(unique=true))
+})
 public class User extends BaseModel{
 	
+	@Property
 	private String login;
 	
 	private String password;
