@@ -14,11 +14,11 @@ import model.User;
 public class LoginService {
 
 	@Inject
-	private UserDAO userDao;
+	private UserDAO dao;
 
 	public OperationResult<LoginResultDTO> login(LoginCredentials credentials) {
 
-		User foundUser = userDao.find(createLoginQuery(credentials)).get();
+		User foundUser = dao.find(createLoginQuery(credentials)).get();
 
 		if (foundUser != null) {
 			return new OperationResult<LoginResultDTO>(new LoginResultDTO(foundUser.getStatus()), HttpStatus.SC_OK);
@@ -28,8 +28,11 @@ public class LoginService {
 	}
 
 	private Query<User> createLoginQuery(LoginCredentials credentials) {
-		return userDao.createQuery().filter("login", credentials.getUser()).filter("password",
+		return dao.createQuery().filter("login", credentials.getUser()).filter("password",
 				credentials.getPassword());
 	}
 
+	public void setDao(UserDAO dao){
+		this.dao = dao;
+	}
 }

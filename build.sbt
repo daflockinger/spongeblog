@@ -15,9 +15,13 @@ libraryDependencies ++= Seq(
   "org.mongodb.morphia" % "morphia-validation" % "1.2.1",
   "org.pac4j" % "play-pac4j" % "2.5.0-SNAPSHOT",
   "org.pac4j" % "pac4j-jwt" % "1.9.2" exclude("commons-io" , "commons-io"),
+  "org.pac4j" % "pac4j-http" % "1.9.2",
   javaJdbc,
   cache,
   javaWs
 )
+
+javaOptions in Test += "-Dconfig.file=conf/application.test.conf"
+routesGenerator := InjectedRoutesGenerator
 
 PlayKeys.externalizeResources := false

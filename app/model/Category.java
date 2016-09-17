@@ -10,10 +10,7 @@ import org.mongodb.morphia.annotations.Reference;
 public class Category extends BaseModel{
 	
 	private String name;
-	
-	@Reference
-	private List<Post> posts;
-	
+		
 	@Reference
 	private Category parentCategory;
 	
@@ -27,12 +24,6 @@ public class Category extends BaseModel{
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public List<Post> getPosts() {
-		return posts;
-	}
-	public void setPosts(List<Post> posts) {
-		this.posts = posts;
 	}
 	public Category getParentCategory() {
 		return parentCategory;
