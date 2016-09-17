@@ -4,17 +4,26 @@ import java.util.List;
 import java.util.Map;
 
 import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.annotations.Field;
+import org.mongodb.morphia.annotations.Index;
+import org.mongodb.morphia.annotations.IndexOptions;
+import org.mongodb.morphia.annotations.Indexes;
+import org.mongodb.morphia.annotations.Property;
 
 
 @Entity
+@Indexes({
+	@Index(fields = @Field(value="name"), options=@IndexOptions(unique=true)),
+	@Index(fields = @Field(value="status"))
+})
 public class Blog extends BaseModel {
 
+	@Property
 	private String name;
+	@Property
 	private BlogStatus status;
 	
-	@Reference
-	private List<User> users;
+	private List<String> users;
 	private Map<String, String> settings;
 
 	public String getName() {
@@ -33,11 +42,11 @@ public class Blog extends BaseModel {
 		this.status = status;
 	}
 
-	public List<User> getUsers() {
+	public List<String> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<User> users) {
+	public void setUsers(List<String> users) {
 		this.users = users;
 	}
 

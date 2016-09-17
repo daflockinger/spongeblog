@@ -1,20 +1,20 @@
 package model;
 
-import java.util.List;
-
 import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.annotations.Field;
+import org.mongodb.morphia.annotations.Index;
+import org.mongodb.morphia.annotations.Indexes;
+import org.mongodb.morphia.annotations.Property;
 
 
 @Entity
+@Indexes({
+	@Index(fields = @Field(value="name"))
+})
 public class Keyword extends BaseModel{
 	
+	@Property
 	private String name;
-	
-	@Reference
-	private List<Post> posts;
-	
 	private Integer popularity;
 	
 	public String getName() {
@@ -22,12 +22,6 @@ public class Keyword extends BaseModel{
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public List<Post> getPosts() {
-		return posts;
-	}
-	public void setPosts(List<Post> posts) {
-		this.posts = posts;
 	}
 	public Integer getPopularity() {
 		return popularity;
