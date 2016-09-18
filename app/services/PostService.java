@@ -1,9 +1,14 @@
 package services;
 
+import org.apache.http.HttpStatus;
+import org.bson.types.ObjectId;
+
 import com.google.inject.Inject;
 
 import dao.PostDAO;
+import dto.OperationResult;
 import model.Post;
+import model.PostStatus;
 
 public class PostService extends BaseServiceImpl<Post, PostDAO>{
 
@@ -11,12 +16,24 @@ public class PostService extends BaseServiceImpl<Post, PostDAO>{
 	private PostDAO dao;
 	
 	@Override
+	public OperationResult<Post> delete(ObjectId id) {
+		if (!existsWithId(id)) {
+			return new OperationResult<Post>(HttpStatus.SC_NOT_FOUND);
+		}
+		Post postToDelete = dao().get(id);
+		postToDelete.setStatus(PostStatus.DELETED);
+		dao.save(postToDelete);
+
+		return new OperationResult<Post>(HttpStatus.SC_NO_CONTENT);
+	}
+	
+	@Override
 	protected boolean isNotUnique(Post model) {
 		return false;
 	}
 
 	@Override
-	protected Class<Post> getModelClass() {
+	public Class<Post> getModelClass() {
 		return Post.class;
 	}
 

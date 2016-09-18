@@ -16,7 +16,7 @@ public class KeywordService extends BaseServiceImpl<Keyword, KeywordDAO>{
 	}
 
 	@Override
-	protected Class<Keyword> getModelClass() {
+	public Class<Keyword> getModelClass() {
 		return Keyword.class;
 	}
 
