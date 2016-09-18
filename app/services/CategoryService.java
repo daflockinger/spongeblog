@@ -16,7 +16,7 @@ public class CategoryService extends BaseServiceImpl<Category, CategoryDAO> {
 	}
 
 	@Override
-	protected Class<Category> getModelClass() {
+	public Class<Category> getModelClass() {
 		return Category.class;
 	}
 

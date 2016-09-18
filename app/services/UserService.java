@@ -16,7 +16,7 @@ public class UserService extends BaseServiceImpl<User, UserDAO> {
 	}
 
 	@Override
-	protected Class<User> getModelClass() {
+	public Class<User> getModelClass() {
 		return User.class;
 	}
 

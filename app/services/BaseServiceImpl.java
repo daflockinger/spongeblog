@@ -51,7 +51,7 @@ public abstract class BaseServiceImpl<M extends BaseModel, T extends ExtendedDAO
 		return new OperationResult<List<?>>(models, HttpStatus.SC_OK);
 	}
 	
-	protected abstract Class<M> getModelClass();
+	public abstract Class<M> getModelClass();
 	
 
 	public OperationResult<M> update(M model) {
@@ -67,7 +67,7 @@ public abstract class BaseServiceImpl<M extends BaseModel, T extends ExtendedDAO
 		return model.getId()==null;
 	}
 
-	private boolean existsWithId(ObjectId id) {
+	protected boolean existsWithId(ObjectId id) {
 		return findById(id).getStatus() != HttpStatus.SC_NOT_FOUND;
 	}
 

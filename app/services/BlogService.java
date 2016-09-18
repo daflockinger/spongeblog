@@ -16,7 +16,7 @@ public class BlogService extends BaseServiceImpl<Blog, BlogDAO>{
 	}
 
 	@Override
-	protected Class<Blog> getModelClass() {
+	public Class<Blog> getModelClass() {
 		return Blog.class;
 	}
 
