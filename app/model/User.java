@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.mongodb.morphia.annotations.Entity;
@@ -16,7 +17,9 @@ import play.data.format.Formats.DateTime;
 @Indexes({
 	@Index(fields = @Field(value="login"), options=@IndexOptions(unique=true))
 })
-public class User extends BaseModel{
+public class User extends BaseModel implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	
 	@Property
 	private String login;

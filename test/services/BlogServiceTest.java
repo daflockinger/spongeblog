@@ -99,7 +99,7 @@ public class BlogServiceTest extends WithApplication {
 		testBlog1.setStatus(BlogStatus.MAINTENANCE);
 		
 		OperationResult<Blog> result = service.update(testBlog1);
-		assertEquals(HttpStatus.SC_NO_CONTENT, result.getStatus());
+		assertEquals(HttpStatus.SC_OK, result.getStatus());
 		
 		Blog updatedBlog = dao.get(testBlog1.getId());
 		
@@ -117,7 +117,7 @@ public class BlogServiceTest extends WithApplication {
 	@Test
 	public void testDelete_withValidBlog_shouldReturnOk() {
 		OperationResult<Blog> result = service.delete(testBlog1.getId());
-		assertEquals(HttpStatus.SC_NO_CONTENT, result.getStatus());
+		assertEquals(HttpStatus.SC_OK, result.getStatus());
 		
 		assertNull(dao.get(testBlog1.getId()));
 	}

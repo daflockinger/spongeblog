@@ -8,12 +8,7 @@ public class OperationResult<T> {
 		this.entity = entity;
 		this.status = status;
 	}
-	
-	public OperationResult(int status){
-		this.status = status;
-		this.entity = null;
-	}
-	
+		
 	public T getEntity() {
 		return entity;
 	}
