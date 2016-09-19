@@ -1,11 +1,17 @@
 package helpers;
 
+import java.io.IOException;
+
 import org.apache.http.HttpStatus;
+import org.bson.types.ObjectId;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import dto.ErrorDTO;
 import dto.OperationResult;
 import play.Logger;
 import play.libs.Json;
@@ -17,7 +23,7 @@ public class JsonHelper {
 	protected ObjectMapper mapper;
 	
 	public JsonHelper(){
-		mapper = new ObjectMapper();
+		mapper = new MongoObjectMapper();
 	}
 	
 	public <U> U extractModel(RequestBody body, Class<U> modelClass) {
@@ -37,8 +43,8 @@ public class JsonHelper {
 		return body != null && body.asJson() != null;
 	}
 	
-	public Result getInvalidJsonMessage(RequestBody body) {
-		return Controller.status(HttpStatus.SC_BAD_REQUEST, Json.toJson(new ErrorDTO("Invalid/Malformed Json", body.asText())));
+	public <M>Result getInvalidJsonMessage(M model) {
+		return Controller.status(HttpStatus.SC_BAD_REQUEST, Json.toJson(model));
 	}
 
 	public Result getStatus(OperationResult<?> result) {
@@ -48,5 +54,24 @@ public class JsonHelper {
 			status = Controller.status(result.getStatus(), Json.toJson(result.getEntity()));
 		}
 		return status;
+	}
+	
+	private static class ObjectIdSerializer extends JsonSerializer<ObjectId> {
+
+	    @Override
+	    public void serialize(ObjectId value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+	        jgen.writeString(value.toString());
+	    }
+	}
+
+
+	private static class MongoObjectMapper extends ObjectMapper {
+
+	    public MongoObjectMapper() {
+	        SimpleModule module = new SimpleModule("ObjectIdmodule");
+	        module.addSerializer(ObjectId.class, new ObjectIdSerializer());
+	        this.registerModule(module);
+	    }
+
 	}
 }

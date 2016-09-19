@@ -24,13 +24,18 @@ public abstract class BaseController<T extends BaseService<M>, M extends BaseMod
 		M model = jsonHelper.extractModel(body, service().getModelClass());
 
 		if (model == null) {
-			return jsonHelper.getInvalidJsonMessage(body);
+			return jsonHelper.getInvalidJsonMessage(service().errorModel(BaseModel.INVALID_JSON + " " + body.asText()));
 		}
 		return jsonHelper.getStatus(service().create(model));
 	}
 
 	public Result findById(String id) {
-		return jsonHelper.getStatus(service().findById(new ObjectId(id)));
+		ObjectId mongoId = null;
+		
+		if(ObjectId.isValid(id)){
+			mongoId = new ObjectId(id);
+		}
+		return jsonHelper.getStatus(service().findById(mongoId));
 	}
 
 	public Result update() {
@@ -38,13 +43,17 @@ public abstract class BaseController<T extends BaseService<M>, M extends BaseMod
 		M model = jsonHelper.extractModel(body, service().getModelClass());
 
 		if (model == null) {
-			return jsonHelper.getInvalidJsonMessage(body);
+			return jsonHelper.getInvalidJsonMessage(service().errorModel(BaseModel.INVALID_JSON + " " + body.asText()));
 		}
 		return jsonHelper.getStatus(service().update(model));
 	}
 
 	public Result delete(String id) {
-		return jsonHelper.getStatus(service().delete(new ObjectId(id)));
+		ObjectId mongoId = null;
+		if(ObjectId.isValid(id)){
+			mongoId = new ObjectId(id);
+		}
+		return jsonHelper.getStatus(service().delete(mongoId));
 	}
 
 	public Result findAllInPage() {
@@ -52,7 +61,7 @@ public abstract class BaseController<T extends BaseService<M>, M extends BaseMod
 		PaginationDTO settings = jsonHelper.extractModel(body, PaginationDTO.class);
 
 		if (settings == null) {
-			return jsonHelper.getInvalidJsonMessage(body);
+			return jsonHelper.getInvalidJsonMessage(service().errorModel(BaseModel.INVALID_JSON + " " + body.asText()));
 		}
 		return jsonHelper.getStatus(service().findAllInPage(settings));
 	}

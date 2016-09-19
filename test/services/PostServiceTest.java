@@ -46,7 +46,7 @@ public class PostServiceTest extends WithApplication {
 		OperationResult<Post> result =  service.delete(testPost1.getId());
 		
 		assertNotNull(result);
-		assertTrue(result.getStatus() == HttpStatus.SC_NO_CONTENT);
+		assertTrue(result.getStatus() == HttpStatus.SC_OK);
 		
 		Post deletedPost = dao.get(testPost1.getId());
 		assertNotNull(deletedPost);

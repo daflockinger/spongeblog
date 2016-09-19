@@ -19,4 +19,6 @@ public interface BaseService<M> {
 	public Class<M> getModelClass();
 	
 	public OperationResult<List<?>> findAllInPage(PaginationDTO settings);
+	
+	public M errorModel(String message);
 }

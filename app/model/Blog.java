@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +17,10 @@ import org.mongodb.morphia.annotations.Property;
 	@Index(fields = @Field(value="name"), options=@IndexOptions(unique=true)),
 	@Index(fields = @Field(value="status"))
 })
-public class Blog extends BaseModel {
+public class Blog extends BaseModel implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	@Property
 	private String name;
 	@Property
