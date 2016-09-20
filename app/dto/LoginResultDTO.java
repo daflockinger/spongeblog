@@ -1,21 +1,22 @@
 package dto;
 
+import model.BaseModel;
 import model.UserStatus;
 
-public class LoginResultDTO {
-	private UserStatus status;
+public class LoginResultDTO  extends BaseModel{
+	private UserStatus userStatus;
 	private String errorMessage;
 	
-	public LoginResultDTO(UserStatus status){
-		this.status = status;
+	public LoginResultDTO(UserStatus userStatus){
+		this.userStatus = userStatus;
 	}
 
-	public UserStatus getStatus() {
-		return status;
+	public UserStatus getUserStatus() {
+		return userStatus;
 	}
 
-	public void setStatus(UserStatus status) {
-		this.status = status;
+	public void setUserStatus(UserStatus userStatus) {
+		this.userStatus = userStatus;
 	}
 
 	public String getErrorMessage() {

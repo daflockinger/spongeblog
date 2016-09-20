@@ -30,7 +30,7 @@ public class User extends BaseModel implements Serializable{
 	
 	private Date registered;
 	
-	private UserStatus status;
+	private UserStatus userStatus;
 	
 	public String getLogin() {
 		return login;
@@ -62,10 +62,10 @@ public class User extends BaseModel implements Serializable{
 	public void setRegistered(Date registered) {
 		this.registered = registered;
 	}
-	public UserStatus getStatus() {
-		return status;
+	public UserStatus getUserStatus() {
+		return userStatus;
 	}
-	public void setStatus(UserStatus status) {
-		this.status = status;
+	public void setUserStatus(UserStatus userStatus) {
+		this.userStatus = userStatus;
 	}
 }

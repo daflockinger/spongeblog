@@ -1,13 +1,12 @@
 package services;
 
-import org.apache.http.HttpStatus;
+import static dto.RestError.NOT_FOUND;
+
 import org.bson.types.ObjectId;
 
 import com.google.inject.Inject;
 
 import dao.PostDAO;
-import dto.OperationResult;
-import model.BaseModel;
 import model.Post;
 import model.PostStatus;
 
@@ -17,15 +16,15 @@ public class PostService extends BaseServiceImpl<Post, PostDAO>{
 	private PostDAO dao;
 	
 	@Override
-	public OperationResult<Post> delete(ObjectId id) {
+	public Post delete(ObjectId id) {
 		if (!existsWithId(id)) {
-			return new OperationResult<Post>(errorModel(BaseModel.NOT_FOUND),HttpStatus.SC_NOT_FOUND);
+			return errorModel(NOT_FOUND);
 		}
 		Post postToDelete = dao().get(id);
-		postToDelete.setStatus(PostStatus.DELETED);
+		postToDelete.setPostStatus(PostStatus.DELETED);
 		dao.save(postToDelete);
 
-		return new OperationResult<Post>(postToDelete,HttpStatus.SC_OK);
+		return postToDelete;
 	}
 	
 	@Override

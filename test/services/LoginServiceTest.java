@@ -1,6 +1,7 @@
 package services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.http.HttpStatus;
 import org.junit.After;
@@ -10,7 +11,6 @@ import org.junit.Test;
 import dao.UserDAO;
 import dto.LoginCredentials;
 import dto.LoginResultDTO;
-import dto.OperationResult;
 import model.User;
 import model.UserStatus;
 import play.test.WithApplication;
@@ -31,7 +31,7 @@ public class LoginServiceTest extends WithApplication{
 		testUser.setEmail("test@testinger.cc");
 		testUser.setNickname("te");
 		testUser.setPassword("1234");
-		testUser.setStatus(UserStatus.ADMIN);
+		testUser.setUserStatus(UserStatus.ADMIN);
 		dao.save(testUser);
 	}
 	
@@ -41,9 +41,9 @@ public class LoginServiceTest extends WithApplication{
 		testCreds.setUser("not existing");
 		testCreds.setPassword("blub");
 		
-		OperationResult<LoginResultDTO> result  = service.login(testCreds);
+		LoginResultDTO result  = service.login(testCreds);
 		
-		assertEquals(HttpStatus.SC_FORBIDDEN, result.getStatus());
+		assertTrue(HttpStatus.SC_FORBIDDEN == result.getStatus());
 	}
 	
 	@Test
@@ -52,10 +52,10 @@ public class LoginServiceTest extends WithApplication{
 		testCreds.setUser("test");
 		testCreds.setPassword("1234");
 		
-		OperationResult<LoginResultDTO> result  = service.login(testCreds);
+		LoginResultDTO result  = service.login(testCreds);
 		
-		assertEquals(HttpStatus.SC_OK, result.getStatus());
-		assertEquals(UserStatus.ADMIN,result.getEntity().getStatus());
+		assertTrue(HttpStatus.SC_OK == result.getStatus());
+		assertEquals(UserStatus.ADMIN,result.getUserStatus());
 	}
 
 	@After

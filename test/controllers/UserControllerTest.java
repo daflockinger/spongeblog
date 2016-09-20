@@ -36,30 +36,30 @@ public class UserControllerTest extends BaseControllerTest<UserController, UserS
 		testUser1 = new User();
 		testUser1.setLogin("Test User");
 		testUser1.setPassword("origpassword");
-		testUser1.setStatus(UserStatus.ADMIN);
+		testUser1.setUserStatus(UserStatus.ADMIN);
 
 		dao.save(testUser1);
 		testId = testUser1.getId().toHexString();
 
 		testUser1.setPassword("updatedpass");
-		testUser1.setStatus(UserStatus.AUTHOR);
+		testUser1.setUserStatus(UserStatus.AUTHOR);
 
 		insertUser = new User();
 		insertUser.setLogin("New User");
-		insertUser.setStatus(UserStatus.SUSPENDED);
+		insertUser.setUserStatus(UserStatus.SUSPENDED);
 		insertUser.setPassword("specialpass");
 
 		PaginationDTO settings = new PaginationDTO();
 		settings.setPage(0);
 		settings.setLimit(1);
-		settings.setFilters(ImmutableMap.of("status", UserStatus.ADMIN.toString()));
+		settings.setFilters(ImmutableMap.of("userStatus", UserStatus.ADMIN.toString()));
 		settings.setSortBy("login");
 
 		insertNode = Json.toJson(insertUser);
 		updateNode = Json.toJson(testUser1);
 		pageNode = Json.toJson(settings);
 
-		testUser1.setStatus(UserStatus.ADMIN);
+		testUser1.setUserStatus(UserStatus.ADMIN);
 	}
 
 	@Test
@@ -74,7 +74,7 @@ public class UserControllerTest extends BaseControllerTest<UserController, UserS
 
 		assertNotNull(newUser);
 		assertEquals("New User", newUser.getLogin());
-		assertEquals(UserStatus.SUSPENDED.toString(), newUser.getStatus().toString());
+		assertEquals(UserStatus.SUSPENDED.toString(), newUser.getUserStatus().toString());
 		assertEquals(newUser.getPassword(), "specialpass");
 		dao.deleteByQuery(dao.createQuery().filter("login", "New User"));
 	}
@@ -96,7 +96,7 @@ public class UserControllerTest extends BaseControllerTest<UserController, UserS
 		User updated = dao.get(testUser1.getId());
 		assertNotNull(updated);
 		assertEquals("Test User", updated.getLogin());
-		assertEquals(UserStatus.AUTHOR.toString(), updated.getStatus().toString());
+		assertEquals(UserStatus.AUTHOR.toString(), updated.getUserStatus().toString());
 		assertEquals(updated.getPassword(), "updatedpass");
 	}
 

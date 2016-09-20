@@ -30,7 +30,7 @@ public class LoginControllerTest extends WithApplication{
 		testUser1 = new User();
 		testUser1.setLogin("flo");
 		testUser1.setPassword("flo123!");
-		testUser1.setStatus(UserStatus.ADMIN);
+		testUser1.setUserStatus(UserStatus.ADMIN);
 		dao.save(testUser1);
 	}
 	
