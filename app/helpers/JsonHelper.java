@@ -1,6 +1,8 @@
 package helpers;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 import org.apache.http.HttpStatus;
 import org.bson.types.ObjectId;
@@ -12,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import dto.OperationResult;
+import model.BaseModel;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -47,13 +49,23 @@ public class JsonHelper {
 		return Controller.status(HttpStatus.SC_BAD_REQUEST, Json.toJson(model));
 	}
 
-	public Result getStatus(OperationResult<?> result) {
+	public <T extends BaseModel>Result getResponse(T result) {
 		Result status = Controller.status(result.getStatus());
 
-		if (result.getEntity() != null) {
-			status = Controller.status(result.getStatus(), Json.toJson(result.getEntity()));
+		if (result != null) {
+			status = Controller.status(result.getStatus(), Json.toJson(result));
 		}
 		return status;
+	}
+	
+	public <T extends BaseModel> Result getResponses(List<T> results) {
+		Integer status = HttpStatus.SC_OK;
+		Optional<T> result = results.stream().findAny();
+		
+		if(result.isPresent()){
+			status = result.get().getStatus();
+		}
+		return Controller.status(status, Json.toJson(results));
 	}
 	
 	private static class ObjectIdSerializer extends JsonSerializer<ObjectId> {

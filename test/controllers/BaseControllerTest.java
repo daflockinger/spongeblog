@@ -1,13 +1,14 @@
 package controllers;
 
+import static org.junit.Assert.assertTrue;
+import static play.test.Helpers.contentAsString;
+import static play.test.Helpers.route;
+
 import org.apache.http.HttpStatus;
-import org.apache.http.util.EntityUtils;
 import org.bson.types.ObjectId;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import static org.junit.Assert.*;
-import static play.test.Helpers.*;
 import dao.ExtendedDAO;
 import model.BaseModel;
 import play.mvc.Http.RequestBuilder;

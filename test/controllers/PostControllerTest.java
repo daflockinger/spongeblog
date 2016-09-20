@@ -36,23 +36,23 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 		testPost1 = new Post();
 		testPost1.setTitle("Test Post");
 		testPost1.setContent("original content");
-		testPost1.setStatus(PostStatus.PUBLIC);
+		testPost1.setPostStatus(PostStatus.PUBLIC);
 
 		dao.save(testPost1);
 		testId = testPost1.getId().toHexString();
 
 		testPost1.setContent("updated content");
-		testPost1.setStatus(PostStatus.MAINTENANCE);
+		testPost1.setPostStatus(PostStatus.MAINTENANCE);
 
 		insertPost = new Post();
 		insertPost.setTitle("New Post");
 		insertPost.setContent("new content");
-		insertPost.setStatus(PostStatus.PRIVATE);
+		insertPost.setPostStatus(PostStatus.PRIVATE);
 
 		PaginationDTO settings = new PaginationDTO();
 		settings.setPage(0);
 		settings.setLimit(1);
-		settings.setFilters(ImmutableMap.of("status", PostStatus.PUBLIC.toString()));
+		settings.setFilters(ImmutableMap.of("postStatus", PostStatus.PUBLIC.toString()));
 		settings.setSortBy("title");
 
 		insertNode = Json.toJson(insertPost);
@@ -60,7 +60,7 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 		pageNode = Json.toJson(settings);
 
 		testPost1.setContent("original content");
-		testPost1.setStatus(PostStatus.PUBLIC);
+		testPost1.setPostStatus(PostStatus.PUBLIC);
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 
 		assertNotNull(newPost);
 		assertEquals("New Post", newPost.getTitle());
-		assertEquals(PostStatus.PRIVATE.toString(), newPost.getStatus().toString());
+		assertEquals(PostStatus.PRIVATE.toString(), newPost.getPostStatus().toString());
 		assertEquals(newPost.getContent(),"new content");
 		dao.deleteByQuery(dao.createQuery().filter("title", "New Post"));
 	}
@@ -92,7 +92,7 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 		Post updated = dao.get(testPost1.getId());
 		assertNotNull(updated);
 		assertEquals("Test Post", updated.getTitle());
-		assertEquals(PostStatus.MAINTENANCE.toString(), updated.getStatus().toString());
+		assertEquals(PostStatus.MAINTENANCE.toString(), updated.getPostStatus().toString());
 		assertEquals(updated.getContent(),"updated content");
 	}
 
@@ -135,7 +135,7 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 	@Test
 	public void testDelete_withValid() {
 		super.testDelete_withValid();
-		assertEquals(dao.get(testPost1.getId()).getStatus().toString(),PostStatus.DELETED.toString());
+		assertEquals(dao.get(testPost1.getId()).getPostStatus().toString(),PostStatus.DELETED.toString());
 	}
 
 	@After

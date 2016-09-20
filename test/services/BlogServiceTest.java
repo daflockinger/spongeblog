@@ -15,7 +15,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import dao.BlogDAO;
-import dto.OperationResult;
 import model.Blog;
 import model.BlogStatus;
 import play.test.WithApplication;
@@ -36,7 +35,7 @@ public class BlogServiceTest extends WithApplication {
 		testBlog1 = new Blog();
 		testBlog1.setName("Test Blog");
 		testBlog1.setSettings(ImmutableMap.of("setting1", "value1", "setting2", "value2", "setting3", "value3"));
-		testBlog1.setStatus(BlogStatus.ACTIVE);
+		testBlog1.setBlogStatus(BlogStatus.ACTIVE);
 		testBlog1.setUsers(ImmutableList.of("test"));
 
 		dao.save(testBlog1);
@@ -44,8 +43,8 @@ public class BlogServiceTest extends WithApplication {
 
 	@Test
 	public void testCreate_withNullBlog_shouldReturnFail() {
-		OperationResult<Blog> result = service.create(null);
-		assertEquals(HttpStatus.SC_CONFLICT, result.getStatus());
+		Blog result = service.create(null);
+		assertTrue(HttpStatus.SC_CONFLICT == result.getStatus());
 	}
 
 	@Test
@@ -53,16 +52,16 @@ public class BlogServiceTest extends WithApplication {
 		Blog testBlog = new Blog();
 		testBlog.setName("Test Blog2");
 		testBlog.setSettings(ImmutableMap.of("setting1", "value1", "setting2", "value2", "setting3", "value3"));
-		testBlog.setStatus(BlogStatus.DISABLED);
+		testBlog.setBlogStatus(BlogStatus.DISABLED);
 		testBlog.setUsers(ImmutableList.of("test2"));
 
-		OperationResult<Blog> result = service.create(testBlog);
-		assertEquals(HttpStatus.SC_CREATED, result.getStatus());
+		Blog result = service.create(testBlog);
+		assertTrue(HttpStatus.SC_CREATED == result.getStatus());
 
 		Blog foundBlog = dao.findOne(dao.createQuery().filter("name", "Test Blog2"));
 		assertNotNull(foundBlog);
 		assertEquals("Test Blog2", foundBlog.getName());
-		assertEquals(BlogStatus.DISABLED, foundBlog.getStatus());
+		assertEquals(BlogStatus.DISABLED, foundBlog.getBlogStatus());
 		assertEquals("test2", foundBlog.getUsers().get(0));
 
 		assertTrue(foundBlog.getSettings().size() == 3);
@@ -70,54 +69,54 @@ public class BlogServiceTest extends WithApplication {
 
 	@Test
 	public void testFindById_withNullId_shouldReturnNotFound() {
-		OperationResult<Blog> result = service.findById(null);
-		assertEquals(HttpStatus.SC_NOT_FOUND, result.getStatus());
+		Blog result = service.findById(null);
+		assertTrue(HttpStatus.SC_NOT_FOUND == result.getStatus());
 	}
 
 	@Test
 	public void testFindById_withNotExistingId_shouldReturnNotFound() {
-		OperationResult<Blog> result = service.findById(new ObjectId());
-		assertEquals(HttpStatus.SC_NOT_FOUND, result.getStatus());
+		Blog result = service.findById(new ObjectId());
+		assertTrue(HttpStatus.SC_NOT_FOUND == result.getStatus());
 	}
 
 	@Test
 	public void testFindById_withExistingId_shouldReturnUser() {
-		OperationResult<Blog> result = service.findById(testBlog1.getId());
-		assertEquals(HttpStatus.SC_OK, result.getStatus());
-		assertEquals("Test Blog", result.getEntity().getName());
+		Blog result = service.findById(testBlog1.getId());
+		assertTrue(HttpStatus.SC_OK == result.getStatus());
+		assertEquals("Test Blog", result.getName());
 	}
 
 	@Test
 	public void testUpdate_withNullBlog_shouldReturnNotFound() {
-		OperationResult<Blog> result = service.update(null);
-		assertEquals(HttpStatus.SC_NOT_FOUND, result.getStatus());
+		Blog result = service.update(null);
+		assertTrue(HttpStatus.SC_NOT_FOUND == result.getStatus());
 	}
 	
 	@Test
 	public void testUpdate_withExistingBlog_shouldReturnOk() {
 		testBlog1.setName("New Test Blog");
-		testBlog1.setStatus(BlogStatus.MAINTENANCE);
+		testBlog1.setBlogStatus(BlogStatus.MAINTENANCE);
 		
-		OperationResult<Blog> result = service.update(testBlog1);
-		assertEquals(HttpStatus.SC_OK, result.getStatus());
+		Blog result = service.update(testBlog1);
+		assertTrue(HttpStatus.SC_OK == result.getStatus());
 		
 		Blog updatedBlog = dao.get(testBlog1.getId());
 		
 		assertEquals("New Test Blog", updatedBlog.getName());
-		assertEquals(BlogStatus.MAINTENANCE, updatedBlog.getStatus());
+		assertEquals(BlogStatus.MAINTENANCE, updatedBlog.getBlogStatus());
 		assertTrue(updatedBlog.getSettings().size() == 3);
 	}
 	
 	@Test
 	public void testDelete_withNullBlog_shouldReturnNotFound() {
-		OperationResult<Blog> result = service.delete(null);
-		assertEquals(HttpStatus.SC_NOT_FOUND, result.getStatus());
+		Blog result = service.delete(null);
+		assertTrue(HttpStatus.SC_NOT_FOUND == result.getStatus());
 	}
 	
 	@Test
 	public void testDelete_withValidBlog_shouldReturnOk() {
-		OperationResult<Blog> result = service.delete(testBlog1.getId());
-		assertEquals(HttpStatus.SC_OK, result.getStatus());
+		Blog result = service.delete(testBlog1.getId());
+		assertTrue(HttpStatus.SC_OK ==  result.getStatus());
 		
 		assertNull(dao.get(testBlog1.getId()));
 	}

@@ -1,23 +1,20 @@
 package model;
 
+import org.apache.http.HttpStatus;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.NotSaved;
 import org.mongodb.morphia.annotations.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import utils.ObjectIdSerializer;
 
 @Entity
 public class BaseModel{
-	
-	public final static String INVALID_JSON = "Invalid/Malformed Json";
-	public final static String ALREADY_EXISTS = "Entity already exists";
-	public final static String NOT_FOUND = "Entity not found";
-	public final static String UNAUTHORIZED = "Username or password is not valid";
-	
+		
 	@Id
 	@JsonSerialize(using = ObjectIdSerializer.class)
 	private ObjectId id ;
@@ -26,7 +23,12 @@ public class BaseModel{
 	@Transient
 	private String errorMessage;
 	
-
+	@JsonIgnore
+	@NotSaved
+	@Transient
+	private Integer status = HttpStatus.SC_OK;
+	
+	
 	public ObjectId getId() {
 		return id;
 	}
@@ -42,4 +44,14 @@ public class BaseModel{
 	public void setErrorMessage(String errorMessage){
 		this.errorMessage = errorMessage;
 	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	
+	
 }

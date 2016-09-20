@@ -19,10 +19,10 @@ import org.mongodb.morphia.annotations.Reference;
 	// for editing
 	@Index(fields = {@Field(value="blog"), @Field(value="user")}),
 	@Index(fields = {@Field(value="blog"), @Field(value="user"), @Field(value="category")}),
-	@Index(fields = {@Field(value="blog"), @Field(value="user"), @Field(value="status")}),
+	@Index(fields = {@Field(value="blog"), @Field(value="user"), @Field(value="postStatus")}),
 	// for view
-	@Index(fields = {@Field(value="blog"), @Field(value="status")}),
-	@Index(fields = {@Field(value="blog"), @Field(value="status"), @Field(value="category")})
+	@Index(fields = {@Field(value="blog"), @Field(value="postStatus")}),
+	@Index(fields = {@Field(value="blog"), @Field(value="postStatus"), @Field(value="category")})
 })
 public class Post extends BaseModel implements Serializable{
 
@@ -38,7 +38,7 @@ public class Post extends BaseModel implements Serializable{
 	private String title;
 	private String content;
 	@Property
-	private PostStatus status;
+	private PostStatus postStatus;
 	private List<String> keywords;
 	@Property
 	private String category;
@@ -79,12 +79,6 @@ public class Post extends BaseModel implements Serializable{
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public PostStatus getStatus() {
-		return status;
-	}
-	public void setStatus(PostStatus status) {
-		this.status = status;
-	}
 	public List<String> getKeywords() {
 		return keywords;
 	}
@@ -97,4 +91,11 @@ public class Post extends BaseModel implements Serializable{
 	public void setCategory(String category) {
 		this.category = category;
 	}
+	public PostStatus getPostStatus() {
+		return postStatus;
+	}
+	public void setPostStatus(PostStatus postStatus) {
+		this.postStatus = postStatus;
+	}
+	
 }

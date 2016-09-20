@@ -24,7 +24,7 @@ public class Blog extends BaseModel implements Serializable{
 	@Property
 	private String name;
 	@Property
-	private BlogStatus status;
+	private BlogStatus blogStatus;
 	
 	private List<String> users;
 	private Map<String, String> settings;
@@ -35,14 +35,6 @@ public class Blog extends BaseModel implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public BlogStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(BlogStatus status) {
-		this.status = status;
 	}
 
 	public List<String> getUsers() {
@@ -59,5 +51,13 @@ public class Blog extends BaseModel implements Serializable{
 
 	public void setSettings(Map<String, String> settings) {
 		this.settings = settings;
+	}
+
+	public BlogStatus getBlogStatus() {
+		return blogStatus;
+	}
+
+	public void setBlogStatus(BlogStatus blogStatus) {
+		this.blogStatus = blogStatus;
 	}
 }

@@ -45,7 +45,7 @@ public class PostDAOTest {
 		testPost1.setContent(
 				"Aliquam tempor est in quam pharetra viverra at eget libero. In varius lacus massa, vel sollicitudin nibh interdum quis. Fusce tellus nisi, interdum eget elit condimentum, dictum imperdiet augue. Duis tempor, odio sit amet eleifend vestibulum, ex elit fermentum mi, ornare vestibulum lorem tortor ut elit. Mauris bibendum, tortor a tempor ultricies, ex est sodales libero, eget consectetur mi lacus congue urna. Fusce mollis sagittis consequat. Sed quis justo sit amet nibh iaculis blandit ut at felis. Nunc egestas sodales tellus, eget consectetur enim tincidunt nec. Ut at vulputate nibh.");
 		testPost1.setKeywords(ImmutableList.of("tech"));
-		testPost1.setStatus(PostStatus.PUBLIC);
+		testPost1.setPostStatus(PostStatus.PUBLIC);
 		dao.save(testPost1);
 
 		testPost2 = new Post();
@@ -57,7 +57,7 @@ public class PostDAOTest {
 		testPost2.setContent(
 				"Integer convallis sagittis pellentesque. Sed vel odio lobortis, egestas felis in, iaculis sem. Suspendisse feugiat nulla vel turpis tincidunt auctor.");
 		testPost2.setKeywords(ImmutableList.of("tech"));
-		testPost2.setStatus(PostStatus.PUBLIC);
+		testPost2.setPostStatus(PostStatus.PUBLIC);
 		dao.save(testPost2);
 
 		testPost3 = new Post();
@@ -69,7 +69,7 @@ public class PostDAOTest {
 		testPost3.setContent(
 				"Vestibulum interdum auctor quam nec finibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. ");
 		testPost3.setKeywords(ImmutableList.of("tech", "food"));
-		testPost3.setStatus(PostStatus.PUBLIC);
+		testPost3.setPostStatus(PostStatus.PUBLIC);
 		dao.save(testPost3);
 
 		testPost4 = new Post();
@@ -81,7 +81,7 @@ public class PostDAOTest {
 		testPost4.setContent(
 				"Nulla id consectetur lacus. Cras condimentum, urna a semper tempor, neque nisi consequat velit, eu eleifend risus est vel enim.");
 		testPost4.setKeywords(ImmutableList.of("drinks", "food"));
-		testPost4.setStatus(PostStatus.PUBLIC);
+		testPost4.setPostStatus(PostStatus.PUBLIC);
 		dao.save(testPost4);
 
 		testPost5 = new Post();
@@ -92,7 +92,7 @@ public class PostDAOTest {
 		testPost5.setCreated(DateTime.now().minusDays(10).toDate());
 		testPost5.setContent("Cras sed lacus nec dui viverra tincidunt. Pellentesque malesuada a augue quis euismod.");
 		testPost5.setKeywords(ImmutableList.of("drinks"));
-		testPost5.setStatus(PostStatus.MAINTENANCE);
+		testPost5.setPostStatus(PostStatus.MAINTENANCE);
 		dao.save(testPost5);
 	}
 
@@ -108,7 +108,7 @@ public class PostDAOTest {
 		pagination.setPage(0);
 		pagination.setSortBy("created");
 		pagination.setSortAsc(false);
-		pagination.setFilters(ImmutableMap.of("blog","testBlog","status", PostStatus.PUBLIC.toString()));
+		pagination.setFilters(ImmutableMap.of("blog","testBlog","postStatus", PostStatus.PUBLIC.toString()));
 		
 		List<Post> posts = dao.findAllInPage(new PaginationQueryDTO<Post>(pagination, Post.class));
 		assertNotNull(posts);

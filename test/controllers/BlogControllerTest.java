@@ -37,25 +37,25 @@ public class BlogControllerTest extends BaseControllerTest<BlogController, BlogS
 		testBlog1 = new Blog();
 		testBlog1.setName("Test Blog");
 		testBlog1.setSettings(ImmutableMap.of("setting1", "value1", "setting2", "value2", "setting3", "value3"));
-		testBlog1.setStatus(BlogStatus.ACTIVE);
+		testBlog1.setBlogStatus(BlogStatus.ACTIVE);
 		testBlog1.setUsers(ImmutableList.of("test"));
 
 		dao.save(testBlog1);
 		testId = testBlog1.getId().toHexString();
 
 		testBlog1.setSettings(ImmutableMap.of("setting1", "value1"));
-		testBlog1.setStatus(BlogStatus.MAINTENANCE);
+		testBlog1.setBlogStatus(BlogStatus.MAINTENANCE);
 
 		insertBlog = new Blog();
 		insertBlog.setName("New BLog");
 		insertBlog.setSettings(ImmutableMap.of("setting2", "value2", "setting3", "value3"));
-		insertBlog.setStatus(BlogStatus.DISABLED);
+		insertBlog.setBlogStatus(BlogStatus.DISABLED);
 		insertBlog.setUsers(ImmutableList.of("test"));
 
 		PaginationDTO settings = new PaginationDTO();
 		settings.setPage(0);
 		settings.setLimit(1);
-		settings.setFilters(ImmutableMap.of("status", BlogStatus.ACTIVE.toString()));
+		settings.setFilters(ImmutableMap.of("blogStatus", BlogStatus.ACTIVE.toString()));
 		settings.setSortBy("name");
 
 		insertNode = Json.toJson(insertBlog);
@@ -63,7 +63,7 @@ public class BlogControllerTest extends BaseControllerTest<BlogController, BlogS
 		pageNode = Json.toJson(settings);
 
 		testBlog1.setSettings(ImmutableMap.of("setting1", "value1", "setting2", "value2", "setting3", "value3"));
-		testBlog1.setStatus(BlogStatus.ACTIVE);
+		testBlog1.setBlogStatus(BlogStatus.ACTIVE);
 	}
 
 	@Test
@@ -78,7 +78,7 @@ public class BlogControllerTest extends BaseControllerTest<BlogController, BlogS
 
 		assertNotNull(newBlog);
 		assertEquals("New BLog", newBlog.getName());
-		assertEquals(BlogStatus.DISABLED.toString(), newBlog.getStatus().toString());
+		assertEquals(BlogStatus.DISABLED.toString(), newBlog.getBlogStatus().toString());
 		assertTrue(newBlog.getSettings().size() == 2);
 		dao.deleteByQuery(dao.createQuery().filter("name", "New BLog"));
 	}
@@ -100,7 +100,7 @@ public class BlogControllerTest extends BaseControllerTest<BlogController, BlogS
 		Blog updated = dao.get(testBlog1.getId());
 		assertNotNull(updated);
 		assertEquals("Test Blog", updated.getName());
-		assertEquals(BlogStatus.MAINTENANCE.toString(), updated.getStatus().toString());
+		assertEquals(BlogStatus.MAINTENANCE.toString(), updated.getBlogStatus().toString());
 		assertTrue(updated.getSettings().size() == 1);
 	}
 

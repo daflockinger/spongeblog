@@ -11,6 +11,7 @@ import play.mvc.Controller;
 import play.mvc.Http.RequestBody;
 import play.mvc.Result;
 import services.BaseService;
+import static dto.RestError.*;
 
 public abstract class BaseController<T extends BaseService<M>, M extends BaseModel> extends Controller {
 
@@ -24,9 +25,9 @@ public abstract class BaseController<T extends BaseService<M>, M extends BaseMod
 		M model = jsonHelper.extractModel(body, service().getModelClass());
 
 		if (model == null) {
-			return jsonHelper.getInvalidJsonMessage(service().errorModel(BaseModel.INVALID_JSON + " " + body.asText()));
+			return jsonHelper.getInvalidJsonMessage(service().errorModel(INVALID_JSON));
 		}
-		return jsonHelper.getStatus(service().create(model));
+		return jsonHelper.getResponse(service().create(model));
 	}
 
 	public Result findById(String id) {
@@ -35,7 +36,7 @@ public abstract class BaseController<T extends BaseService<M>, M extends BaseMod
 		if(ObjectId.isValid(id)){
 			mongoId = new ObjectId(id);
 		}
-		return jsonHelper.getStatus(service().findById(mongoId));
+		return jsonHelper.getResponse(service().findById(mongoId));
 	}
 
 	public Result update() {
@@ -43,9 +44,9 @@ public abstract class BaseController<T extends BaseService<M>, M extends BaseMod
 		M model = jsonHelper.extractModel(body, service().getModelClass());
 
 		if (model == null) {
-			return jsonHelper.getInvalidJsonMessage(service().errorModel(BaseModel.INVALID_JSON + " " + body.asText()));
+			return jsonHelper.getInvalidJsonMessage(service().errorModel(INVALID_JSON));
 		}
-		return jsonHelper.getStatus(service().update(model));
+		return jsonHelper.getResponse(service().update(model));
 	}
 
 	public Result delete(String id) {
@@ -53,7 +54,7 @@ public abstract class BaseController<T extends BaseService<M>, M extends BaseMod
 		if(ObjectId.isValid(id)){
 			mongoId = new ObjectId(id);
 		}
-		return jsonHelper.getStatus(service().delete(mongoId));
+		return jsonHelper.getResponse(service().delete(mongoId));
 	}
 
 	public Result findAllInPage() {
@@ -61,9 +62,9 @@ public abstract class BaseController<T extends BaseService<M>, M extends BaseMod
 		PaginationDTO settings = jsonHelper.extractModel(body, PaginationDTO.class);
 
 		if (settings == null) {
-			return jsonHelper.getInvalidJsonMessage(service().errorModel(BaseModel.INVALID_JSON + " " + body.asText()));
+			return jsonHelper.getInvalidJsonMessage(service().errorModel(INVALID_JSON));
 		}
-		return jsonHelper.getStatus(service().findAllInPage(settings));
+		return jsonHelper.getResponses(service().findAllInPage(settings));
 	}
 
 	public void setJsonHelper(JsonHelper jsonHelper) {

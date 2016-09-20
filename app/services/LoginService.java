@@ -1,6 +1,5 @@
 package services;
 
-import org.apache.http.HttpStatus;
 import org.mongodb.morphia.query.Query;
 
 import com.google.inject.Inject;
@@ -8,25 +7,24 @@ import com.google.inject.Inject;
 import dao.UserDAO;
 import dto.LoginCredentials;
 import dto.LoginResultDTO;
-import dto.OperationResult;
+import dto.RestError;
 import model.BaseModel;
 import model.User;
-import play.Logger;
 
 public class LoginService {
 
 	@Inject
 	private UserDAO dao;
 
-	public OperationResult<LoginResultDTO> login(LoginCredentials credentials) {
+	public LoginResultDTO login(LoginCredentials credentials) {
 
 		User foundUser = dao.find(createLoginQuery(credentials)).get();
 
 		if (foundUser != null) {
-			return new OperationResult<LoginResultDTO>(new LoginResultDTO(foundUser.getStatus()), HttpStatus.SC_OK);
+			return new LoginResultDTO(foundUser.getUserStatus());
 		}
 
-		return new OperationResult<LoginResultDTO>(errorModel(BaseModel.UNAUTHORIZED),HttpStatus.SC_FORBIDDEN);
+		return errorModel(RestError.UNAUTHORIZED);
 	}
 
 	private Query<User> createLoginQuery(LoginCredentials credentials) {
@@ -37,9 +35,10 @@ public class LoginService {
 		this.dao = dao;
 	}
 
-	public LoginResultDTO errorModel(String message) {
+	public LoginResultDTO errorModel(RestError message) {
 		LoginResultDTO errorModel = new LoginResultDTO(null);
-		errorModel.setErrorMessage(message);
+		errorModel.setErrorMessage(message.toString());
+		errorModel.setStatus(message.status());
 		return errorModel;
 	}
 }

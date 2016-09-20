@@ -25,7 +25,7 @@ public class LoginController extends Controller{
 			return jsonHelper.getInvalidJsonMessage(body);
 		}
 		
-		return jsonHelper.getStatus(service.login(credentials));
+		return jsonHelper.getResponse(service.login(credentials));
 	}
 
 	

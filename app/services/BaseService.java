@@ -3,22 +3,21 @@ package services;
 import java.util.List;
 
 import org.bson.types.ObjectId;
-
-import dto.OperationResult;
 import dto.PaginationDTO;
+import dto.RestError;
 
 public interface BaseService<M> {
-	public OperationResult<M> create(M model);
+	public M create(M model);
 
-	public OperationResult<M> findById(ObjectId id);
+	public M findById(ObjectId id);
 
-	public OperationResult<M> update(M model);
+	public M update(M model);
 	
-	public OperationResult<M> delete(ObjectId id);
+	public M delete(ObjectId id);
 	
 	public Class<M> getModelClass();
 	
-	public OperationResult<List<?>> findAllInPage(PaginationDTO settings);
+	public List<M> findAllInPage(PaginationDTO settings);
 	
-	public M errorModel(String message);
+	public M errorModel(RestError message);
 }

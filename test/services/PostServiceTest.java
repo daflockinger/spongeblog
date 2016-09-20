@@ -11,7 +11,6 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 
 import dao.PostDAO;
-import dto.OperationResult;
 import model.Post;
 import model.PostStatus;
 import play.test.WithApplication;
@@ -37,25 +36,25 @@ public class PostServiceTest extends WithApplication {
 		testPost1.setContent(
 				"Aliquam tempor est in quam pharetra viverra at eget libero. In varius lacus massa, vel sollicitudin nibh interdum quis. Fusce tellus nisi, interdum eget elit condimentum, dictum imperdiet augue. Duis tempor, odio sit amet eleifend vestibulum, ex elit fermentum mi, ornare vestibulum lorem tortor ut elit. Mauris bibendum, tortor a tempor ultricies, ex est sodales libero, eget consectetur mi lacus congue urna. Fusce mollis sagittis consequat. Sed quis justo sit amet nibh iaculis blandit ut at felis. Nunc egestas sodales tellus, eget consectetur enim tincidunt nec. Ut at vulputate nibh.");
 		testPost1.setKeywords(ImmutableList.of("tech"));
-		testPost1.setStatus(PostStatus.PUBLIC);
+		testPost1.setPostStatus(PostStatus.PUBLIC);
 		dao.save(testPost1);
 	}
 	
 	@Test
 	public void testDelete_withExistingId_shouldSetStatusToDelete(){
-		OperationResult<Post> result =  service.delete(testPost1.getId());
+		Post result =  service.delete(testPost1.getId());
 		
 		assertNotNull(result);
 		assertTrue(result.getStatus() == HttpStatus.SC_OK);
 		
 		Post deletedPost = dao.get(testPost1.getId());
 		assertNotNull(deletedPost);
-		assertEquals(PostStatus.DELETED, deletedPost.getStatus());
+		assertEquals(PostStatus.DELETED, deletedPost.getPostStatus());
 	}
 	
 	@Test
 	public void testDelete_withNotExistingId_shouldReturnNotFound(){
-		OperationResult<Post> result = service.delete(null);
+		Post result = service.delete(null);
 		assertTrue(result.getStatus() == HttpStatus.SC_NOT_FOUND);
 	}
 	
