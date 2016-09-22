@@ -60,7 +60,7 @@ public class BaseControllerTest<C extends BaseController<S, M>, S extends BaseSe
 	protected void testUpdate_withNotValid(){
 		RequestBuilder request = new RequestBuilder().method("PUT")
 				.bodyText("invalid")
-	            .uri(routePath);
+	            .uri(routePath + "/1");
 	    Result result = route(request);
 	    
 	    assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
@@ -69,7 +69,7 @@ public class BaseControllerTest<C extends BaseController<S, M>, S extends BaseSe
 	protected void testUpdate_withValid(){
 		RequestBuilder request = new RequestBuilder().method("PUT")
 	            .bodyJson(updateNode)
-	            .uri(routePath);
+	            .uri(routePath + "/1");
 	    Result result = route(request);
 	    
 	    assertTrue(result.status() == HttpStatus.SC_OK);
@@ -78,7 +78,7 @@ public class BaseControllerTest<C extends BaseController<S, M>, S extends BaseSe
 	protected void testUpdate_withNotExisting(){
 		RequestBuilder request = new RequestBuilder().method("PUT")
 	            .bodyJson(insertNode)
-	            .uri(routePath);
+	            .uri(routePath + "/1");
 	    Result result = route(request);
 	    
 	    assertTrue(result.status() == HttpStatus.SC_NOT_FOUND);
@@ -103,7 +103,7 @@ public class BaseControllerTest<C extends BaseController<S, M>, S extends BaseSe
 	
 
 	protected void testFindAllInPage_withNotValid(){
-		RequestBuilder request = new RequestBuilder().method("PUT")
+		RequestBuilder request = new RequestBuilder().method("POST")
 	            .bodyText("invalid")
 	            .uri(routePath + "/page");
 	    Result result = route(request);
@@ -112,13 +112,21 @@ public class BaseControllerTest<C extends BaseController<S, M>, S extends BaseSe
 	}
 	
 	protected String testFindAllInPage_withValid(){
-		RequestBuilder request = new RequestBuilder().method("PUT")
+		RequestBuilder request = new RequestBuilder().method("POST")
 	            .bodyJson(pageNode)
 	            .uri(routePath + "/page");
 	    Result result = route(request);
 	    
 	    assertTrue(result.status() == HttpStatus.SC_OK);
 	    return contentAsString(result);
+	}
+	
+	protected void testFindAll_ShouldReturnOne(){
+		RequestBuilder request = new RequestBuilder().method("GET")
+	            .uri(routePath);
+	    Result result = route(request);
+	    
+	    assertTrue(result.status() == HttpStatus.SC_OK);
 	}
 	
 	

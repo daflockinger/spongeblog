@@ -122,15 +122,8 @@ public class BlogControllerTest extends BaseControllerTest<BlogController, BlogS
 	}
 
 	@Test
-	public void testFindAllInPage_withNotValid() {
-		super.testFindAllInPage_withNotValid();
-	}
-
-	@Test
-	public void testFindAllInPage_withValid_() {
-		String response = super.testFindAllInPage_withValid();
-		assertTrue(response.contains("Test Blog"));
-		assertTrue(response.contains(BlogStatus.ACTIVE.toString()));
+	public void testFindAll_shouldReturnOne(){
+		super.testFindAll_ShouldReturnOne();
 	}
 
 	@Test

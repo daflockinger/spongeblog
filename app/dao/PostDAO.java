@@ -4,6 +4,6 @@ import org.bson.types.ObjectId;
 
 import model.Post;
 
-public class PostDAO extends ExtendedDAO<Post, ObjectId>{
+public class PostDAO extends PaginationDAO<Post, ObjectId>{
 
 }

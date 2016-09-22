@@ -41,15 +41,9 @@ public abstract class BaseServiceImpl<M extends BaseModel, T extends ExtendedDAO
 		}
 		return model;
 	}
-
-	public List<M> findAllInPage(PaginationDTO settings) {
-		List<M> models = new ArrayList<>();
-		models = dao().findAllInPage(new PaginationQueryDTO<M>(settings, getModelClass()));
-
-		if (models == null) {
-			return ImmutableList.of(errorModel(NOT_FOUND));
-		}
-		return models;
+	
+	public List<M> findAll(){
+		return dao().find().asList();
 	}
 
 	public M errorModel(RestError message) {

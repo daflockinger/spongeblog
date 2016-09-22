@@ -17,7 +17,7 @@ public interface BaseService<M> {
 	
 	public Class<M> getModelClass();
 	
-	public List<M> findAllInPage(PaginationDTO settings);
+	public List<M> findAll();
 	
 	public M errorModel(RestError message);
 }

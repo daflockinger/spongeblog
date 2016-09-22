@@ -37,7 +37,6 @@ public class PostDAOTest {
 		dao = new PostDAO();
 
 		testPost1 = new Post();
-		testPost1.setBlog("testBlog");
 		testPost1.setCategory("cat 1");
 		testPost1.setUser("test");
 		testPost1.setTitle("last Post");
@@ -49,7 +48,6 @@ public class PostDAOTest {
 		dao.save(testPost1);
 
 		testPost2 = new Post();
-		testPost2.setBlog("testBlog2");
 		testPost2.setCategory("cat 1");
 		testPost2.setUser("test");
 		testPost2.setTitle("another blogs Post");
@@ -57,11 +55,10 @@ public class PostDAOTest {
 		testPost2.setContent(
 				"Integer convallis sagittis pellentesque. Sed vel odio lobortis, egestas felis in, iaculis sem. Suspendisse feugiat nulla vel turpis tincidunt auctor.");
 		testPost2.setKeywords(ImmutableList.of("tech"));
-		testPost2.setPostStatus(PostStatus.PUBLIC);
+		testPost2.setPostStatus(PostStatus.DELETED);
 		dao.save(testPost2);
 
 		testPost3 = new Post();
-		testPost3.setBlog("testBlog");
 		testPost3.setCategory("cat 1");
 		testPost3.setUser("test");
 		testPost3.setTitle("old post");
@@ -73,7 +70,6 @@ public class PostDAOTest {
 		dao.save(testPost3);
 
 		testPost4 = new Post();
-		testPost4.setBlog("testBlog");
 		testPost4.setCategory("cat 2");
 		testPost4.setUser("test");
 		testPost4.setTitle("oldest post");
@@ -85,7 +81,6 @@ public class PostDAOTest {
 		dao.save(testPost4);
 
 		testPost5 = new Post();
-		testPost5.setBlog("testBlog");
 		testPost5.setCategory("cat 1");
 		testPost5.setUser("test");
 		testPost5.setTitle("inactive Post");
@@ -108,7 +103,7 @@ public class PostDAOTest {
 		pagination.setPage(0);
 		pagination.setSortBy("created");
 		pagination.setSortAsc(false);
-		pagination.setFilters(ImmutableMap.of("blog","testBlog","postStatus", PostStatus.PUBLIC.toString()));
+		pagination.setFilters(ImmutableMap.of("postStatus", PostStatus.PUBLIC.toString()));
 		
 		List<Post> posts = dao.findAllInPage(new PaginationQueryDTO<Post>(pagination, Post.class));
 		assertNotNull(posts);

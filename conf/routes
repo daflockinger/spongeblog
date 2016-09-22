@@ -6,35 +6,39 @@
 GET     /api/v1                           controllers.HomeController.index
 #GET     /auth                       	 controllers.AuthenticateController.getToken
 
+GET     /api/v1/blogs                 	   controllers.BlogController.findAll()
 GET     /api/v1/blogs/:id                  controllers.BlogController.findById(id)
 POST    /api/v1/blogs                      controllers.BlogController.create()
-PUT     /api/v1/blogs                      controllers.BlogController.update()
+PUT     /api/v1/blogs/:id                  controllers.BlogController.update(id)
 DELETE  /api/v1/blogs/:id                  controllers.BlogController.delete(id)
-PUT     /api/v1/blogs/page                 controllers.BlogController.findAllInPage()
 
+GET     /api/v1/categories                 	    controllers.CategoryController.findAll()
 GET     /api/v1/categories/:id                  controllers.CategoryController.findById(id)
 POST    /api/v1/categories                      controllers.CategoryController.create()
-PUT     /api/v1/categories                      controllers.CategoryController.update()
+PUT     /api/v1/categories/:id                  controllers.CategoryController.update(id)
 DELETE  /api/v1/categories/:id                  controllers.CategoryController.delete(id)
-PUT     /api/v1/categories/page                 controllers.CategoryController.findAllInPage()
 
+
+GET     /api/v1/keywords                 	  controllers.KeywordController.findAll()
 GET     /api/v1/keywords/:id                  controllers.KeywordController.findById(id)
 POST    /api/v1/keywords                      controllers.KeywordController.create()
-PUT     /api/v1/keywords                      controllers.KeywordController.update()
+PUT     /api/v1/keywords/:id                  controllers.KeywordController.update(id)
 DELETE  /api/v1/keywords/:id                  controllers.KeywordController.delete(id)
-PUT     /api/v1/keywords/page                 controllers.KeywordController.findAllInPage()
 
+
+GET     /api/v1/posts                      controllers.PostController.findAll()
 GET     /api/v1/posts/:id                  controllers.PostController.findById(id)
 POST    /api/v1/posts                      controllers.PostController.create()
-PUT     /api/v1/posts                      controllers.PostController.update()
+PUT     /api/v1/posts/:id                  controllers.PostController.update(id)
 DELETE  /api/v1/posts/:id                  controllers.PostController.delete(id)
-PUT     /api/v1/posts/page                 controllers.PostController.findAllInPage()
+POST    /api/v1/posts/page                 controllers.PostController.findAllInPage()
 
+
+GET     /api/v1/users                      controllers.UserController.findAll()
 GET     /api/v1/users/:id                  controllers.UserController.findById(id)
 POST    /api/v1/users                      controllers.UserController.create()
-PUT     /api/v1/users                      controllers.UserController.update()
+PUT     /api/v1/users/:id                  controllers.UserController.update(id)
 DELETE  /api/v1/users/:id                  controllers.UserController.delete(id)
-PUT     /api/v1/users/page                 controllers.UserController.findAllInPage()
 
 POST    /api/v1/login                      controllers.LoginController.login()
 

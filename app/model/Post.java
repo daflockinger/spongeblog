@@ -17,19 +17,17 @@ import org.mongodb.morphia.annotations.Reference;
 @Entity
 @Indexes({
 	// for editing
-	@Index(fields = {@Field(value="blog"), @Field(value="user")}),
-	@Index(fields = {@Field(value="blog"), @Field(value="user"), @Field(value="category")}),
-	@Index(fields = {@Field(value="blog"), @Field(value="user"), @Field(value="postStatus")}),
+	@Index(fields = {@Field(value="user")}),
+	@Index(fields = {@Field(value="user"), @Field(value="category")}),
+	@Index(fields = {@Field(value="user"), @Field(value="postStatus")}),
 	// for view
-	@Index(fields = {@Field(value="blog"), @Field(value="postStatus")}),
-	@Index(fields = {@Field(value="blog"), @Field(value="postStatus"), @Field(value="category")})
+	@Index(fields = {@Field(value="postStatus")}),
+	@Index(fields = {@Field(value="postStatus"), @Field(value="category")})
 })
 public class Post extends BaseModel implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	@Property
-	private String blog;
 	@Property
 	private String user;
 	
@@ -42,13 +40,7 @@ public class Post extends BaseModel implements Serializable{
 	private List<String> keywords;
 	@Property
 	private String category;
-	
-	public String getBlog() {
-		return blog;
-	}
-	public void setBlog(String blog) {
-		this.blog = blog;
-	}
+
 	public String getUser() {
 		return user;
 	}
