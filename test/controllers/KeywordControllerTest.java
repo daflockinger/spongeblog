@@ -110,15 +110,8 @@ public class KeywordControllerTest extends BaseControllerTest<KeywordController,
 	}
 
 	@Test
-	public void testFindAllInPage_withNotValid() {
-		super.testFindAllInPage_withNotValid();
-	}
-
-	@Test
-	public void testFindAllInPage_withValid_() {
-		String response = super.testFindAllInPage_withValid();
-		assertTrue(response.contains("Test Keyword"));
-		assertTrue(response.contains("2"));
+	public void testFindAll_shouldReturnOne(){
+		super.testFindAll_ShouldReturnOne();
 	}
 
 	@Test

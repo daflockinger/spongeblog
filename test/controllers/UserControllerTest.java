@@ -119,16 +119,8 @@ public class UserControllerTest extends BaseControllerTest<UserController, UserS
 	}
 
 	@Test
-	public void testFindAllInPage_withNotValid() {
-		super.testFindAllInPage_withNotValid();
-	}
-
-	@Test
-	public void testFindAllInPage_withValid_() {
-		String response = super.testFindAllInPage_withValid();
-		assertTrue(response.contains("Test User"));
-		assertTrue(response.contains(UserStatus.ADMIN.toString()));
-		assertTrue(response.contains("origpassword"));
+	public void testFindAll_shouldReturnOne(){
+		super.testFindAll_ShouldReturnOne();
 	}
 
 	@Test

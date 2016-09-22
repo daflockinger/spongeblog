@@ -110,15 +110,8 @@ public class CategoryControllerTest extends BaseControllerTest<CategoryControlle
 	}
 
 	@Test
-	public void testFindAllInPage_withNotValid() {
-		super.testFindAllInPage_withNotValid();
-	}
-
-	@Test
-	public void testFindAllInPage_withValid_() {
-		String response = super.testFindAllInPage_withValid();
-		assertTrue(response.contains("Test Category"));
-		assertTrue(response.contains("2"));
+	public void testFindAll_shouldReturnOne(){
+		super.testFindAll_ShouldReturnOne();
 	}
 
 	@Test

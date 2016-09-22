@@ -2,6 +2,9 @@ package services;
 
 import static dto.RestError.NOT_FOUND;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bson.types.ObjectId;
 
 import com.google.inject.Inject;
@@ -10,7 +13,7 @@ import dao.PostDAO;
 import model.Post;
 import model.PostStatus;
 
-public class PostService extends BaseServiceImpl<Post, PostDAO>{
+public class PostService extends PaginationServiceImpl<Post, PostDAO>{
 
 	@Inject
 	private PostDAO dao;
@@ -25,6 +28,11 @@ public class PostService extends BaseServiceImpl<Post, PostDAO>{
 		dao.save(postToDelete);
 
 		return postToDelete;
+	}
+
+	@Override
+	public List<Post> findAll(){
+		return new ArrayList<>();
 	}
 	
 	@Override

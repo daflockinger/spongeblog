@@ -28,7 +28,6 @@ public class PostServiceTest extends WithApplication {
 		service.setDao(dao);
 
 		testPost1 = new Post();
-		testPost1.setBlog("testBlog");
 		testPost1.setCategory("cat 1");
 		testPost1.setUser("test");
 		testPost1.setTitle("last Post");

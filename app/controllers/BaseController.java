@@ -16,7 +16,7 @@ import static dto.RestError.*;
 public abstract class BaseController<T extends BaseService<M>, M extends BaseModel> extends Controller {
 
 	@Inject
-	private JsonHelper jsonHelper;
+	protected JsonHelper jsonHelper;
 
 	protected abstract T service();
 
@@ -38,8 +38,12 @@ public abstract class BaseController<T extends BaseService<M>, M extends BaseMod
 		}
 		return jsonHelper.getResponse(service().findById(mongoId));
 	}
+	
+	public Result findAll(){
+		return jsonHelper.getResponses(service().findAll());
+	}
 
-	public Result update() {
+	public Result update(String id) {
 		RequestBody body = request().body();
 		M model = jsonHelper.extractModel(body, service().getModelClass());
 
@@ -55,16 +59,6 @@ public abstract class BaseController<T extends BaseService<M>, M extends BaseMod
 			mongoId = new ObjectId(id);
 		}
 		return jsonHelper.getResponse(service().delete(mongoId));
-	}
-
-	public Result findAllInPage() {
-		RequestBody body = request().body();
-		PaginationDTO settings = jsonHelper.extractModel(body, PaginationDTO.class);
-
-		if (settings == null) {
-			return jsonHelper.getInvalidJsonMessage(service().errorModel(INVALID_JSON));
-		}
-		return jsonHelper.getResponses(service().findAllInPage(settings));
 	}
 
 	public void setJsonHelper(JsonHelper jsonHelper) {

@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import model.Post;
 import services.PostService;
 
-public class PostController extends BaseController<PostService, Post>{
+public class PostController extends PaginationController<PostService, Post>{
 
 	@Inject
 	private PostService service;
