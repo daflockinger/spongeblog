@@ -1,7 +1,9 @@
 package helpers;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.http.HttpStatus;
@@ -23,14 +25,14 @@ import play.mvc.Result;
 
 public class JsonHelper {
 	protected ObjectMapper mapper;
-	
-	public JsonHelper(){
+
+	public JsonHelper() {
 		mapper = new MongoObjectMapper();
 	}
-	
+
 	public <U> U extractModel(RequestBody body, Class<U> modelClass) {
 		U model = null;
-
+		
 		if (isBodyValidJson(body)) {
 			try {
 				model = mapper.treeToValue(body.asJson(), modelClass);
@@ -44,12 +46,13 @@ public class JsonHelper {
 	private boolean isBodyValidJson(RequestBody body) {
 		return body != null && body.asJson() != null;
 	}
-	
-	public <M>Result getInvalidJsonMessage(M model) {
-		return Controller.status(HttpStatus.SC_BAD_REQUEST, Json.toJson(model));
+
+	public <M> Result getInvalidJsonMessage(M model) {
+		return Controller.status(HttpStatus.SC_BAD_REQUEST, Json.toJson(model))
+				.withHeader("Access-Control-Allow-Origin", "*");
 	}
 
-	public <T extends BaseModel>Result getResponse(T result) {
+	public <T extends BaseModel> Result getResponse(T result) {
 		Result status = Controller.status(result.getStatus());
 
 		if (result != null) {
@@ -57,33 +60,37 @@ public class JsonHelper {
 		}
 		return status;
 	}
-	
-	public <T extends BaseModel> Result getResponses(List<T> results) {
+
+	public <T extends BaseModel> Result getResponses(List<T> results, Class<T> type) {
 		Integer status = HttpStatus.SC_OK;
 		Optional<T> result = results.stream().findAny();
-		
-		if(result.isPresent()){
+
+		if (result.isPresent()) {
 			status = result.get().getStatus();
 		}
-		return Controller.status(status, Json.toJson(results));
+		return Controller.status(status, Json.toJson(wrapListForJson(results, type)));
 	}
-	
+
+	public <T extends BaseModel> Map<String, List<T>> wrapListForJson(List<T> results, Class<T> type) {
+		return Collections.singletonMap(type.getSimpleName(), results);
+	}
+
 	private static class ObjectIdSerializer extends JsonSerializer<ObjectId> {
 
-	    @Override
-	    public void serialize(ObjectId value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
-	        jgen.writeString(value.toString());
-	    }
+		@Override
+		public void serialize(ObjectId value, JsonGenerator jgen, SerializerProvider provider)
+				throws IOException, JsonProcessingException {
+			jgen.writeString(value.toString());
+		}
 	}
-
 
 	private static class MongoObjectMapper extends ObjectMapper {
 
-	    public MongoObjectMapper() {
-	        SimpleModule module = new SimpleModule("ObjectIdmodule");
-	        module.addSerializer(ObjectId.class, new ObjectIdSerializer());
-	        this.registerModule(module);
-	    }
+		public MongoObjectMapper() {
+			SimpleModule module = new SimpleModule("ObjectIdmodule");
+			module.addSerializer(ObjectId.class, new ObjectIdSerializer());
+			this.registerModule(module);
+		}
 
 	}
 }

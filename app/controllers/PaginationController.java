@@ -16,6 +16,6 @@ public abstract class PaginationController<T extends PaginationService<M>, M ext
 		if (settings == null) {
 			return jsonHelper.getInvalidJsonMessage(service().errorModel(INVALID_JSON));
 		}
-		return jsonHelper.getResponses(service().findAllInPage(settings));
+		return jsonHelper.getResponses(service().findAllInPage(settings),service().getModelClass());
 	}
 }

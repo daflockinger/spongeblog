@@ -17,6 +17,7 @@ libraryDependencies ++= Seq(
   "org.pac4j" % "pac4j-jwt" % "1.9.2" exclude("commons-io" , "commons-io"),
   "org.pac4j" % "pac4j-http" % "1.9.2",
   javaJdbc,
+  filters,
   cache,
   javaWs
 )

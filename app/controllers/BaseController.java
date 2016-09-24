@@ -40,7 +40,7 @@ public abstract class BaseController<T extends BaseService<M>, M extends BaseMod
 	}
 	
 	public Result findAll(){
-		return jsonHelper.getResponses(service().findAll());
+		return jsonHelper.getResponses(service().findAll(),service().getModelClass());
 	}
 
 	public Result update(String id) {

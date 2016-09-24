@@ -8,11 +8,16 @@ import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.Property;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+
 
 @Entity
 @Indexes({
 	@Index(fields = @Field(value="name"))
 })
+@JsonTypeInfo(include=As.WRAPPER_OBJECT, use=Id.NAME)
 public class Keyword extends BaseModel implements Serializable{
 
 	private static final long serialVersionUID = 1L;
