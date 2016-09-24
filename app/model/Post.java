@@ -4,15 +4,16 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Field;
-import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
-import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.annotations.Reference;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+
 
 @Entity
 @Indexes({
@@ -24,6 +25,7 @@ import org.mongodb.morphia.annotations.Reference;
 	@Index(fields = {@Field(value="postStatus")}),
 	@Index(fields = {@Field(value="postStatus"), @Field(value="category")})
 })
+@JsonTypeInfo(include=As.WRAPPER_OBJECT, use=Id.NAME)
 public class Post extends BaseModel implements Serializable{
 
 	private static final long serialVersionUID = 1L;

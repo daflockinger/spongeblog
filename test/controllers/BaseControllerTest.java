@@ -58,7 +58,7 @@ public class BaseControllerTest<C extends BaseController<S, M>, S extends BaseSe
 	
 
 	protected void testUpdate_withNotValid(){
-		RequestBuilder request = new RequestBuilder().method("PUT")
+		RequestBuilder request = new RequestBuilder().method("PATCH")
 				.bodyText("invalid")
 	            .uri(routePath + "/1");
 	    Result result = route(request);
@@ -67,7 +67,7 @@ public class BaseControllerTest<C extends BaseController<S, M>, S extends BaseSe
 	}
 	
 	protected void testUpdate_withValid(){
-		RequestBuilder request = new RequestBuilder().method("PUT")
+		RequestBuilder request = new RequestBuilder().method("PATCH")
 	            .bodyJson(updateNode)
 	            .uri(routePath + "/1");
 	    Result result = route(request);
@@ -76,7 +76,7 @@ public class BaseControllerTest<C extends BaseController<S, M>, S extends BaseSe
 	}
 	
 	protected void testUpdate_withNotExisting(){
-		RequestBuilder request = new RequestBuilder().method("PUT")
+		RequestBuilder request = new RequestBuilder().method("PATCH")
 	            .bodyJson(insertNode)
 	            .uri(routePath + "/1");
 	    Result result = route(request);

@@ -11,11 +11,16 @@ import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+
 
 @Entity
 @Indexes({
 	@Index(fields = @Field(value="name"), options=@IndexOptions(unique=true))
 })
+@JsonTypeInfo(include=As.WRAPPER_OBJECT, use=Id.NAME)
 public class Category extends BaseModel implements Serializable{
 
 	private static final long serialVersionUID = 1L;

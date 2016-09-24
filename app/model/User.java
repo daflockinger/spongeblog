@@ -5,18 +5,19 @@ import java.util.Date;
 
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Field;
-import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.Property;
-
-import play.data.format.Formats.DateTime;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 @Entity
 @Indexes({
 	@Index(fields = @Field(value="login"), options=@IndexOptions(unique=true))
 })
+@JsonTypeInfo(include=As.WRAPPER_OBJECT, use=Id.NAME)
 public class User extends BaseModel implements Serializable{
 
 	private static final long serialVersionUID = 1L;
