@@ -44,14 +44,8 @@ public class CategoryControllerTest extends BaseControllerTest<CategoryControlle
 		insertCategory.setName("New Category");
 		insertCategory.setRank(99);
 
-		PaginationDTO settings = new PaginationDTO();
-		settings.setPage(0);
-		settings.setLimit(1);
-		settings.setSortBy("name");
-
 		insertNode = Json.toJson(insertCategory);
 		updateNode = Json.toJson(testCategory1);
-		pageNode = Json.toJson(settings);
 
 		testCategory1.setRank(2);
 	}

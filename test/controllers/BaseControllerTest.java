@@ -10,6 +10,7 @@ import org.bson.types.ObjectId;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import dao.ExtendedDAO;
+import dto.PaginationDTO;
 import model.BaseModel;
 import play.mvc.Http.RequestBuilder;
 import play.mvc.Result;
@@ -25,7 +26,7 @@ public class BaseControllerTest<C extends BaseController<S, M>, S extends BaseSe
 	
 	protected JsonNode insertNode;
 	protected JsonNode updateNode;
-	protected JsonNode pageNode;
+	protected String params;
 	
 	protected String routePath;
 	protected String testId;
@@ -101,20 +102,9 @@ public class BaseControllerTest<C extends BaseController<S, M>, S extends BaseSe
 	    return contentAsString(result);
 	}
 	
-
-	protected void testFindAllInPage_withNotValid(){
-		RequestBuilder request = new RequestBuilder().method("POST")
-	            .bodyText("invalid")
-	            .uri(routePath + "/page");
-	    Result result = route(request);
-	    
-	    assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
-	}
-	
 	protected String testFindAllInPage_withValid(){
-		RequestBuilder request = new RequestBuilder().method("POST")
-	            .bodyJson(pageNode)
-	            .uri(routePath + "/page");
+		RequestBuilder request = new RequestBuilder().method("GET")
+	            .uri(routePath + params);
 	    Result result = route(request);
 	    
 	    assertTrue(result.status() == HttpStatus.SC_OK);

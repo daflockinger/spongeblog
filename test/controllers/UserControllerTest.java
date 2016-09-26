@@ -49,15 +49,8 @@ public class UserControllerTest extends BaseControllerTest<UserController, UserS
 		insertUser.setUserStatus(UserStatus.SUSPENDED);
 		insertUser.setPassword("specialpass");
 
-		PaginationDTO settings = new PaginationDTO();
-		settings.setPage(0);
-		settings.setLimit(1);
-		settings.setFilters(ImmutableMap.of("userStatus", UserStatus.ADMIN.toString()));
-		settings.setSortBy("login");
-
 		insertNode = Json.toJson(insertUser);
 		updateNode = Json.toJson(testUser1);
-		pageNode = Json.toJson(settings);
 
 		testUser1.setUserStatus(UserStatus.ADMIN);
 	}

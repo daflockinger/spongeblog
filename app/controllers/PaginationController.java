@@ -1,21 +1,31 @@
 package controllers;
 
-import static dto.RestError.INVALID_JSON;
+import com.google.inject.Inject;
 
 import dto.PaginationDTO;
+import helpers.PaginationMapper;
 import model.BaseModel;
-import play.mvc.Http.RequestBody;
 import play.mvc.Result;
 import services.PaginationService;
 
-public abstract class PaginationController<T extends PaginationService<M>, M extends BaseModel> extends BaseController<T, M> {
-	public Result findAllInPage() {
-		RequestBody body = request().body();
-		PaginationDTO settings = jsonHelper.extractModel(body, PaginationDTO.class);
+public abstract class PaginationController<T extends PaginationService<M>,M extends BaseModel>
+		extends BaseController<T, M> {
 
-		if (settings == null) {
-			return jsonHelper.getInvalidJsonMessage(service().errorModel(INVALID_JSON));
+	@Inject
+	private PaginationMapper mapper;
+
+	private Result findAllInPage(PaginationDTO settings) {
+		return jsonHelper.getResponses(service().findAllInPage(settings), service().getModelClass());
+	}
+
+	@Override
+	public Result findAll() {
+		PaginationDTO pagination = mapper.mapParamsToPagination(request().queryString());
+
+		if (pagination != null) {
+			return findAllInPage(pagination);
+		} else {
+			return super.findAll();
 		}
-		return jsonHelper.getResponses(service().findAllInPage(settings),service().getModelClass());
 	}
 }

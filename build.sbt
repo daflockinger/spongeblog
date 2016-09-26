@@ -16,6 +16,7 @@ libraryDependencies ++= Seq(
   "org.pac4j" % "play-pac4j" % "2.5.1-SNAPSHOT",
   "org.pac4j" % "pac4j-jwt" % "1.9.2" exclude("commons-io" , "commons-io"),
   "org.pac4j" % "pac4j-http" % "1.9.2",
+  "org.powermock" % "powermock-module-junit4" % "1.6.5",
   javaJdbc,
   filters,
   cache,

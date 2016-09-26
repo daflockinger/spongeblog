@@ -44,14 +44,8 @@ public class KeywordControllerTest extends BaseControllerTest<KeywordController,
 		insertKeyword.setName("New Keyword");
 		insertKeyword.setPopularity(99);
 
-		PaginationDTO settings = new PaginationDTO();
-		settings.setPage(0);
-		settings.setLimit(1);
-		settings.setSortBy("name");
-
 		insertNode = Json.toJson(insertKeyword);
 		updateNode = Json.toJson(testKeyword1);
-		pageNode = Json.toJson(settings);
 
 		testKeyword1.setPopularity(2);
 	}
