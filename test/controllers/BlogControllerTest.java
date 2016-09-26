@@ -52,15 +52,8 @@ public class BlogControllerTest extends BaseControllerTest<BlogController, BlogS
 		insertBlog.setBlogStatus(BlogStatus.DISABLED);
 		insertBlog.setUsers(ImmutableList.of("test"));
 
-		PaginationDTO settings = new PaginationDTO();
-		settings.setPage(0);
-		settings.setLimit(1);
-		settings.setFilters(ImmutableMap.of("blogStatus", BlogStatus.ACTIVE.toString()));
-		settings.setSortBy("name");
-
 		insertNode = Json.toJson(insertBlog);
 		updateNode = Json.toJson(testBlog1);
-		pageNode = Json.toJson(settings);
 
 		testBlog1.setSettings(ImmutableMap.of("setting1", "value1", "setting2", "value2", "setting3", "value3"));
 		testBlog1.setBlogStatus(BlogStatus.ACTIVE);

@@ -31,7 +31,6 @@ GET     /api/v1/posts/:id                  controllers.PostController.findById(i
 POST    /api/v1/posts                      controllers.PostController.create()
 PATCH     /api/v1/posts/:id                  controllers.PostController.update(id)
 DELETE  /api/v1/posts/:id                  controllers.PostController.delete(id)
-POST    /api/v1/posts/page                 controllers.PostController.findAllInPage()
 
 
 GET     /api/v1/users                      controllers.UserController.findAll()

@@ -5,11 +5,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.powermock.reflect.Whitebox;
 
 import com.google.common.collect.ImmutableMap;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import dao.PostDAO;
 import dto.PaginationDTO;
@@ -57,7 +62,7 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 
 		insertNode = Json.toJson(insertPost);
 		updateNode = Json.toJson(testPost1);
-		pageNode = Json.toJson(settings);
+		params = "?page=0&limit=1&sort=title&postStatus=PUBLIC";
 
 		testPost1.setContent("original content");
 		testPost1.setPostStatus(PostStatus.PUBLIC);
@@ -112,11 +117,6 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 		assertTrue(response.contains("Test Post"));
 		assertTrue(response.contains(PostStatus.PUBLIC.toString()));
 		assertTrue(response.contains("original content"));
-	}
-
-	@Test
-	public void testFindAllInPage_withNotValid() {
-		super.testFindAllInPage_withNotValid();
 	}
 
 	@Test
