@@ -7,8 +7,11 @@ import java.util.List;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Index;
+import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexes;
+import org.mongodb.morphia.annotations.NotSaved;
 import org.mongodb.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Transient;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
@@ -17,6 +20,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 @Entity
 @Indexes({
+	// unique for post title because I want clean urls
+	@Index(fields = @Field(value="title"), options=@IndexOptions(unique=true)),
 	// for editing
 	@Index(fields = {@Field(value="user")}),
 	@Index(fields = {@Field(value="user"), @Field(value="category")}),
@@ -42,7 +47,24 @@ public class Post extends BaseModel implements Serializable{
 	private List<String> keywords;
 	@Property
 	private String category;
-
+	private Boolean noPost;
+	
+	@NotSaved
+	@Transient
+	private Boolean hasPreviousPage;
+	
+	public Boolean getHasPreviousPage() {
+		return hasPreviousPage;
+	}
+	public void setHasPreviousPage(Boolean hasPreviousPage) {
+		this.hasPreviousPage = hasPreviousPage;
+	}
+	public Boolean getNoPost() {
+		return noPost;
+	}
+	public void setNoPost(Boolean noPost) {
+		this.noPost = noPost;
+	}
 	public String getUser() {
 		return user;
 	}

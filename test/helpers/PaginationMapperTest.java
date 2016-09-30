@@ -33,7 +33,9 @@ public class PaginationMapperTest {
 		
 		testParams.put("sort", new String[]{"name"});
 		testParams.put("blub", new String[]{"bli"});
-		testParams.put("oba", new String[]{"na"});
+		testParams.put("oba", new String[]{"false"});
+		testParams.put("numa", new String[]{"234"});
+		testParams.put("goed", new String[]{"12.9"});
 				
 		PaginationDTO pagination = mapper.mapParamsToPagination(testParams);
 		
@@ -43,12 +45,14 @@ public class PaginationMapperTest {
 		assertTrue(pagination.isSortAsc());
 		assertEquals(pagination.getSortBy(),"name");
 		
-		Map<String,String> filters = pagination.getFilters();
+		Map<String,Object> filters = pagination.getFilters();
 		
 		assertNotNull(filters);
-		assertTrue(filters.size() == 2);
+		assertTrue(filters.size() == 4);
 		assertEquals(filters.get("blub"),"bli");
-		assertEquals(filters.get("oba"),"na");
+		assertEquals(filters.get("oba"),false);
+		assertEquals(filters.get("numa"),234);
+		assertEquals(filters.get("goed"),12.9f);
 	}
 	
 	@Test

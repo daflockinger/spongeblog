@@ -26,4 +26,8 @@ public abstract class PaginationServiceImpl<M extends BaseModel, T extends Pagin
 		}
 		return models;
 	}
+	
+	public boolean hasPreviousPage(PaginationDTO settings){
+		return dao().hasPreviousPage(new PaginationQueryDTO<M>(settings, getModelClass()));
+	}
 }

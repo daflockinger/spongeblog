@@ -4,10 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static play.test.Helpers.route;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +23,8 @@ import dto.PaginationDTO;
 import model.Post;
 import model.PostStatus;
 import play.libs.Json;
+import play.mvc.Result;
+import play.mvc.Http.RequestBuilder;
 import services.PostService;
 
 public class PostControllerTest extends BaseControllerTest<PostController, PostService, PostDAO, Post> {
@@ -44,7 +48,7 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 		testPost1.setPostStatus(PostStatus.PUBLIC);
 
 		dao.save(testPost1);
-		testId = testPost1.getId().toHexString();
+		testId = testPost1.getTitle().replaceAll(" ","_");//.getId().toHexString();
 
 		testPost1.setContent("updated content");
 		testPost1.setPostStatus(PostStatus.MAINTENANCE);
@@ -134,7 +138,11 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 
 	@Test
 	public void testDelete_withValid() {
-		super.testDelete_withValid();
+		RequestBuilder request = new RequestBuilder().method("DELETE")
+	            .uri(routePath + "/" + testPost1.getId());
+	    Result result = route(request);
+	    
+	    assertTrue(result.status() == HttpStatus.SC_OK);
 		assertEquals(dao.get(testPost1.getId()).getPostStatus().toString(),PostStatus.DELETED.toString());
 	}
 

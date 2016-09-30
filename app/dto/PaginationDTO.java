@@ -7,12 +7,12 @@ public class PaginationDTO {
 	private int limit;
 	private String sortBy;
 	private boolean sortAsc;
-	private Map<String, String> filters;
+	private Map<String, Object> filters;
 	
-	public Map<String, String> getFilters() {
+	public Map<String, Object> getFilters() {
 		return filters;
 	}
-	public void setFilters(Map<String, String> filters) {
+	public void setFilters(Map<String, Object> filters) {
 		this.filters = filters;
 	}
 	public int getPage() {

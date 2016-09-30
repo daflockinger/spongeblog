@@ -35,7 +35,15 @@ public class Category extends BaseModel implements Serializable{
 	private List<Category> childCategories;
 	
 	private Integer rank;
-
+	private Boolean sideCategory;
+	
+	
+	public Boolean getSideCategory() {
+		return sideCategory;
+	}
+	public void setSideCategory(Boolean sideCategory) {
+		this.sideCategory = sideCategory;
+	}
 	public String getName() {
 		return name;
 	}
