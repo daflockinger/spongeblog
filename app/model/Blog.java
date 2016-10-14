@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Index;
@@ -27,10 +30,15 @@ public class Blog extends BaseModel implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Property
+	@Size(min=3,max=255)
+	@NotNull
 	private String name;
+	
 	@Property
+	@NotNull
 	private BlogStatus blogStatus;
 	
+	@NotNull
 	private List<String> users;
 	private Map<String, String> settings;
 

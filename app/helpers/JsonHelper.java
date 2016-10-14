@@ -10,11 +10,19 @@ import org.apache.http.HttpStatus;
 import org.bson.types.ObjectId;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 
 import model.BaseModel;
 import play.Logger;
@@ -28,19 +36,29 @@ public class JsonHelper {
 
 	public JsonHelper() {
 		mapper = new MongoObjectMapper();
+		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
+		//mapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);//TODO try that, don't know if it works
 	}
 
 	public <U> U extractModel(RequestBody body, Class<U> modelClass) {
 		U model = null;
-		
+
 		if (isBodyValidJson(body)) {
 			try {
-				model = mapper.treeToValue(body.asJson(), modelClass);
+				model = mapper.treeToValue(tempFixJsonRootNameToFirstLetterUpperCase(body.asJson(), modelClass),
+						modelClass);
 			} catch (JsonProcessingException jsonException) {
 				Logger.error("Error processing json: ", jsonException);
 			}
 		}
 		return model;
+	}
+
+	private <U> JsonNode tempFixJsonRootNameToFirstLetterUpperCase(JsonNode inNode, Class<U> modelClass) {
+		String stringified = inNode.toString();
+
+		return Json.parse(stringified.replaceFirst(modelClass.getSimpleName().toLowerCase(), modelClass.getSimpleName()));
 	}
 
 	private boolean isBodyValidJson(RequestBody body) {
@@ -83,7 +101,7 @@ public class JsonHelper {
 			jgen.writeString(value.toString());
 		}
 	}
-
+	
 	private static class MongoObjectMapper extends ObjectMapper {
 
 		public MongoObjectMapper() {

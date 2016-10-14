@@ -2,6 +2,9 @@ package model;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Index;
@@ -23,6 +26,8 @@ public class Keyword extends BaseModel implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Property
+	@Size(min=2,max=255)
+	@NotNull
 	private String name;
 	private Integer popularity;
 	

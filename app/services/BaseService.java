@@ -20,4 +20,6 @@ public interface BaseService<M> {
 	public List<M> findAll();
 	
 	public M errorModel(RestError message);
+	
+	public M errorModel(RestError message,String addonMessage);
 }

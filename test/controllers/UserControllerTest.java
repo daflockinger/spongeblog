@@ -4,18 +4,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static play.test.Helpers.contentAsString;
 
+import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableMap;
-
 import dao.UserDAO;
-import dto.PaginationDTO;
 import model.User;
 import model.UserStatus;
 import play.libs.Json;
+import play.mvc.Result;
 import services.UserService;
 
 public class UserControllerTest extends BaseControllerTest<UserController, UserService, UserDAO, User> {
@@ -80,6 +80,75 @@ public class UserControllerTest extends BaseControllerTest<UserController, UserS
 	@Test
 	public void testUpdate_withNotValid() {
 		super.testUpdate_withNotValid();
+	}
+	
+	@Test
+	public void testUpdate_withValidationGood_shouldWork(){
+		User invalidUser = new User();
+		invalidUser.setLogin("abc");
+		invalidUser.setPassword("ckk");
+		invalidUser.setEmail("a@b.cc");
+		invalidUser.setUserStatus(UserStatus.ADMIN);
+		
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidUser));
+
+		assertTrue(result.status() == HttpStatus.SC_OK);
+	}
+	
+	@Test
+	public void testUpdate_withLoginValidationFail_shouldThrowException(){
+		User invalidUser = new User();
+		invalidUser.setLogin("ab");
+		invalidUser.setPassword("ckkkd");
+		invalidUser.setEmail("a@b.cc");
+		invalidUser.setUserStatus(UserStatus.ADMIN);
+		
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidUser));
+
+		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
+		assertTrue(contentAsString(result).contains("login"));
+	}
+	
+	@Test
+	public void testUpdate_withPasswordValidationFail_shouldThrowException(){
+		User invalidUser = new User();
+		invalidUser.setLogin("akkb");
+		invalidUser.setPassword("cd");
+		invalidUser.setEmail("a@b.cc");
+		invalidUser.setUserStatus(UserStatus.ADMIN);
+		
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidUser));
+
+		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
+		assertTrue(contentAsString(result).contains("password"));
+	}
+	
+	@Test
+	public void testUpdate_withEmailValidationFail_shouldThrowException(){
+		User invalidUser = new User();
+		invalidUser.setLogin("akkb");
+		invalidUser.setPassword("cjd");
+		invalidUser.setEmail("a(at)b");
+		invalidUser.setUserStatus(UserStatus.ADMIN);
+		
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidUser));
+
+		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
+		assertTrue(contentAsString(result).contains("email"));
+	}
+	
+	@Test
+	public void testUpdate_withStatusValidationFail_shouldThrowException(){
+		User invalidUser = new User();
+		invalidUser.setLogin("akkb");
+		invalidUser.setPassword("cjd");
+		invalidUser.setEmail("a@b.cc");
+		invalidUser.setUserStatus(null);
+		
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidUser));
+
+		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
+		assertTrue(contentAsString(result).contains("userStatus"));
 	}
 
 	@Test

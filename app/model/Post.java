@@ -3,7 +3,12 @@ package model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Index;
@@ -36,23 +41,39 @@ public class Post extends BaseModel implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Property
+	@Size(min=3,max=60)
+	@NotNull
 	private String user;
 	
 	private Date created;
 	private Date modified;
+	@Size(min=3,max=255)
+	@NotNull
 	private String title;
 	private String content;
+	
 	@Property
+	@NotNull
 	private PostStatus postStatus;
+	
 	private List<String> keywords;
 	@Property
+	@NotBlank
 	private String category;
 	private Boolean noPost;
+	private Map<String,String> attributes;
 	
 	@NotSaved
 	@Transient
 	private Boolean hasPreviousPage;
 	
+	
+	public Map<String, String> getAttributes() {
+		return attributes;
+	}
+	public void setAttributes(Map<String, String> attributes) {
+		this.attributes = attributes;
+	}
 	public Boolean getHasPreviousPage() {
 		return hasPreviousPage;
 	}

@@ -2,29 +2,24 @@ package controllers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static play.test.Helpers.contentAsString;
 import static play.test.Helpers.route;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.powermock.reflect.Whitebox;
 
 import com.google.common.collect.ImmutableMap;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import dao.PostDAO;
 import dto.PaginationDTO;
 import model.Post;
 import model.PostStatus;
 import play.libs.Json;
-import play.mvc.Result;
 import play.mvc.Http.RequestBuilder;
+import play.mvc.Result;
 import services.PostService;
 
 public class PostControllerTest extends BaseControllerTest<PostController, PostService, PostDAO, Post> {
@@ -46,6 +41,8 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 		testPost1.setTitle("Test Post");
 		testPost1.setContent("original content");
 		testPost1.setPostStatus(PostStatus.PUBLIC);
+		testPost1.setCategory("Test Category");
+		testPost1.setUser("abc");
 
 		dao.save(testPost1);
 		testId = testPost1.getTitle().replaceAll(" ","_");//.getId().toHexString();
@@ -57,6 +54,8 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 		insertPost.setTitle("New Post");
 		insertPost.setContent("new content");
 		insertPost.setPostStatus(PostStatus.PRIVATE);
+		insertPost.setCategory("Inserted Category");
+		insertPost.setUser("abc");
 
 		PaginationDTO settings = new PaginationDTO();
 		settings.setPage(0);
@@ -93,7 +92,98 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 	public void testUpdate_withNotValid() {
 		super.testUpdate_withNotValid();
 	}
+	
+	
+	@Test
+	public void testUpdate_withValidationGood_shouldWork(){
+		Post invalidPost = new Post();
+		invalidPost.setUser("abc");
+		invalidPost.setTitle(testPost1.getTitle());
+		invalidPost.setCategory("abc");
+		invalidPost.setPostStatus(PostStatus.PRIVATE);
+		invalidPost.setId(testPost1.getId());
+		
+		
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidPost));
 
+		assertTrue(result.status() == HttpStatus.SC_OK);
+	}
+	
+	@Test
+	public void testUpdate_withUserValidationFail_shouldThrowException(){
+		Post invalidPost = new Post();
+		invalidPost.setUser("ac");
+		invalidPost.setTitle("Test Post");
+		invalidPost.setCategory("abc");
+		invalidPost.setPostStatus(PostStatus.PRIVATE);
+		invalidPost.setId(testPost1.getId());
+		
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidPost));
+
+		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
+		assertTrue(contentAsString(result).contains("user"));
+	}
+	
+	@Test
+	public void testUpdate_withNullUserValidationFail_shouldThrowException(){
+		Post invalidPost = new Post();
+		invalidPost.setUser(null);
+		invalidPost.setTitle("Test Post");
+		invalidPost.setCategory("abc");
+		invalidPost.setPostStatus(PostStatus.PRIVATE);
+		invalidPost.setId(testPost1.getId());
+		
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidPost));
+
+		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
+		assertTrue(contentAsString(result).contains("user"));
+	}
+	
+	@Test
+	public void testUpdate_withCategoryValidationFail_shouldThrowException(){
+		Post invalidPost = new Post();
+		invalidPost.setUser("ack");
+		invalidPost.setTitle("Test Post");
+		invalidPost.setCategory("");
+		invalidPost.setPostStatus(PostStatus.PRIVATE);
+		invalidPost.setId(testPost1.getId());
+		
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidPost));
+
+		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
+		assertTrue(contentAsString(result).contains("category"));
+	}
+	
+	@Test
+	public void testUpdate_withNullCategoryValidationFail_shouldThrowException(){
+		Post invalidPost = new Post();
+		invalidPost.setUser("abc");
+		invalidPost.setTitle("Test Post");
+		invalidPost.setCategory(null);
+		invalidPost.setPostStatus(PostStatus.PRIVATE);
+		invalidPost.setId(testPost1.getId());
+		
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidPost));
+
+		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
+		assertTrue(contentAsString(result).contains("category"));
+	}
+	
+	@Test
+	public void testUpdate_withNullStatusValidationFail_shouldThrowException(){
+		Post invalidPost = new Post();
+		invalidPost.setUser("ack");
+		invalidPost.setTitle("Test Post");
+		invalidPost.setCategory("kk");
+		invalidPost.setPostStatus(null);
+		invalidPost.setId(testPost1.getId());
+		
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidPost));
+
+		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
+		assertTrue(contentAsString(result).contains("postStatus"));
+	}
+	
 	@Test
 	public void testUpdate_withValid() {
 		super.testUpdate_withValid();

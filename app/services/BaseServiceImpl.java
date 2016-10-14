@@ -1,16 +1,14 @@
 package services;
 
-import java.util.ArrayList;
+import static dto.RestError.ALREADY_EXISTS;
+import static dto.RestError.NOT_FOUND;
+
 import java.util.List;
 
 import org.apache.http.HttpStatus;
 import org.bson.types.ObjectId;
 
-import com.google.common.collect.ImmutableList;
-import static dto.RestError.*;
 import dao.ExtendedDAO;
-import dto.PaginationDTO;
-import dto.PaginationQueryDTO;
 import dto.RestError;
 import model.BaseModel;
 import play.Logger;
@@ -47,9 +45,13 @@ public abstract class BaseServiceImpl<M extends BaseModel, T extends ExtendedDAO
 	}
 
 	public M errorModel(RestError message) {
+		return errorModel(message,"");
+	}
+	
+	public M errorModel(RestError message,String addonMessage) {
 		try {
 			M errorModel = getModelClass().newInstance();
-			errorModel.setErrorMessage(message.toString());
+			errorModel.setErrorMessage(message.toString() + addonMessage);
 			errorModel.setStatus(message.status());
 			return errorModel;
 		} catch (InstantiationException e) {

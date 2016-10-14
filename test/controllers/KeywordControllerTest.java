@@ -4,15 +4,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static play.test.Helpers.contentAsString;
 
+import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import dao.KeywordDAO;
-import dto.PaginationDTO;
 import model.Keyword;
 import play.libs.Json;
+import play.mvc.Result;
 import services.KeywordService;
 
 public class KeywordControllerTest extends BaseControllerTest<KeywordController, KeywordService, KeywordDAO, Keyword> {
@@ -70,7 +72,40 @@ public class KeywordControllerTest extends BaseControllerTest<KeywordController,
 	public void testCreate_withAlreadyExisting() {
 		super.testCreate_withAlreadyExisting();
 	}
+	
+	@Test
+	public void testUpdate_withValidationGood_shouldWork(){
+		Keyword invalidKeyword = new Keyword();
+		invalidKeyword.setName("ab");
+		
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidKeyword));
 
+		assertTrue(result.status() == HttpStatus.SC_OK);
+	}
+	
+	@Test
+	public void testUpdate_withNameValidationFail_shouldThrowException(){
+		Keyword invalidKeyword = new Keyword();
+		invalidKeyword.setName("a");
+		
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidKeyword));
+
+		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
+		assertTrue(contentAsString(result).contains("name"));
+	}
+	
+	@Test
+	public void testUpdate_withNameNullValidationFail_shouldThrowException(){
+		Keyword invalidKeyword = new Keyword();
+		invalidKeyword.setName(null);
+		
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidKeyword));
+
+		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
+		assertTrue(contentAsString(result).contains("name"));
+	}
+	
+	
 	@Test
 	public void testUpdate_withNotValid() {
 		super.testUpdate_withNotValid();

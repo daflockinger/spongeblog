@@ -10,7 +10,6 @@ import org.bson.types.ObjectId;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import dao.ExtendedDAO;
-import dto.PaginationDTO;
 import model.BaseModel;
 import play.mvc.Http.RequestBuilder;
 import play.mvc.Result;
@@ -57,29 +56,37 @@ public class BaseControllerTest<C extends BaseController<S, M>, S extends BaseSe
 	    assertTrue(result.status() == HttpStatus.SC_CONFLICT);
 	}
 	
+	protected Result testUpdate_withValidationError(JsonNode validationFail){
+		RequestBuilder request = new RequestBuilder().method("PUT")
+	            .bodyJson(validationFail)
+	            .uri(routePath + "/" + testId);
+	    Result result = route(request);
+	    
+	    return result;
+	}
 
 	protected void testUpdate_withNotValid(){
-		RequestBuilder request = new RequestBuilder().method("PATCH")
+		RequestBuilder request = new RequestBuilder().method("PUT")
 				.bodyText("invalid")
-	            .uri(routePath + "/1");
+	            .uri(routePath + "/12345678");
 	    Result result = route(request);
 	    
 	    assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
 	}
 	
 	protected void testUpdate_withValid(){
-		RequestBuilder request = new RequestBuilder().method("PATCH")
+		RequestBuilder request = new RequestBuilder().method("PUT")
 	            .bodyJson(updateNode)
-	            .uri(routePath + "/1");
+	            .uri(routePath + "/" + testId);
 	    Result result = route(request);
 	    
 	    assertTrue(result.status() == HttpStatus.SC_OK);
 	}
 	
 	protected void testUpdate_withNotExisting(){
-		RequestBuilder request = new RequestBuilder().method("PATCH")
+		RequestBuilder request = new RequestBuilder().method("PUT")
 	            .bodyJson(insertNode)
-	            .uri(routePath + "/1");
+	            .uri(routePath + "/1234567890123");
 	    Result result = route(request);
 	    
 	    assertTrue(result.status() == HttpStatus.SC_NOT_FOUND);

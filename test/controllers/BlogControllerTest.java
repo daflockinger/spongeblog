@@ -4,7 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static play.test.Helpers.contentAsString;
 
+import java.util.ArrayList;
+
+import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,10 +17,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import dao.BlogDAO;
-import dto.PaginationDTO;
 import model.Blog;
 import model.BlogStatus;
 import play.libs.Json;
+import play.mvc.Result;
 import services.BlogService;
 
 public class BlogControllerTest extends BaseControllerTest<BlogController, BlogService, BlogDAO, Blog> {
@@ -87,6 +91,69 @@ public class BlogControllerTest extends BaseControllerTest<BlogController, BlogS
 	}
 
 	@Test
+	public void testUpdate_withValidationGood_shouldWork() {
+		Blog invalidBlog = new Blog();
+		invalidBlog.setName("abc");
+		invalidBlog.setBlogStatus(BlogStatus.ACTIVE);
+		invalidBlog.setUsers(new ArrayList<String>());
+
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidBlog));
+		assertTrue(result.status() == HttpStatus.SC_OK);
+	}
+
+	@Test
+	public void testUpdate_withNameValidationFail_shouldThrowException() {
+		Blog invalidBlog = new Blog();
+		invalidBlog.setName("ac");
+		invalidBlog.setBlogStatus(BlogStatus.ACTIVE);
+		invalidBlog.setUsers(new ArrayList<String>());
+
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidBlog));
+
+		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
+		assertTrue(contentAsString(result).contains("name"));
+	}
+
+	@Test
+	public void testUpdate_withNullNameValidationFail_shouldThrowException() {
+		Blog invalidBlog = new Blog();
+		invalidBlog.setName(null);
+		invalidBlog.setBlogStatus(BlogStatus.ACTIVE);
+		invalidBlog.setUsers(new ArrayList<String>());
+
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidBlog));
+
+		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
+		assertTrue(contentAsString(result).contains("name"));
+	}
+
+	@Test
+	public void testUpdate_withStatusValidationFail_shouldThrowException() {
+		Blog invalidBlog = new Blog();
+		invalidBlog.setName("abc");
+		invalidBlog.setBlogStatus(null);
+		invalidBlog.setUsers(new ArrayList<String>());
+
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidBlog));
+
+		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
+		assertTrue(contentAsString(result).contains("blogStatus"));
+	}
+
+	@Test
+	public void testUpdate_withUserValidationFail_shouldThrowException() {
+		Blog invalidBlog = new Blog();
+		invalidBlog.setName("abc");
+		invalidBlog.setBlogStatus(BlogStatus.ACTIVE);
+		invalidBlog.setUsers(null);
+
+		Result result = super.testUpdate_withValidationError(Json.toJson(invalidBlog));
+
+		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
+		assertTrue(contentAsString(result).contains("user"));
+	}
+
+	@Test
 	public void testUpdate_withValid() {
 		super.testUpdate_withValid();
 
@@ -115,7 +182,7 @@ public class BlogControllerTest extends BaseControllerTest<BlogController, BlogS
 	}
 
 	@Test
-	public void testFindAll_shouldReturnOne(){
+	public void testFindAll_shouldReturnOne() {
 		super.testFindAll_ShouldReturnOne();
 	}
 
