@@ -18,11 +18,15 @@ import exceptions.BlogOnlyOneInstanceAllowedException;
 import exceptions.ModelAlreadyExistsException;
 import helpers.JsonHelper;
 import model.Blog;
+import play.mvc.Controller;
 import play.mvc.Http.RequestBody;
 import play.mvc.Result;
 import services.BlogService;
 
-public class BlogController extends BaseController<BlogService, BlogDTO, Blog>{
+public class BlogController extends Controller {
+
+	@Inject
+	SimpleController<BlogDTO, Blog, BlogService> simple;
 
 	@Inject 
 	BlogService blogService;
@@ -30,64 +34,62 @@ public class BlogController extends BaseController<BlogService, BlogDTO, Blog>{
 	@Inject
 	protected JsonHelper jsonHelper;
 
-
 	public Result create() {
 		RequestBody body = request().body();
 		BlogDTO model = jsonHelper.extractModel(body, BlogDTO.class);
 		BlogDTO resultModel = new BlogDTO();
 
 		if (model == null) {
-			return jsonHelper.getInvalidJsonMessage(service().errorModel(INVALID_JSON));
+			return jsonHelper.getInvalidJsonMessage(blogService.errorModel(INVALID_JSON));
 		}
 
 		try {
-			resultModel = service().create(model);
+			resultModel = blogService.create(model);
 		} catch (VerboseJSR303ConstraintViolationException validationException) {
-			resultModel = service().errorModel(VALIDATION_FAILED,validationException.getMessage());
+			resultModel = blogService.errorModel(VALIDATION_FAILED,validationException.getMessage());
 		} catch (BlogOnlyOneInstanceAllowedException e) {
-			resultModel = service().errorModel(ACTION_NOT_ALLOWED,e.getMessage());
+			resultModel = blogService.errorModel(ACTION_NOT_ALLOWED,e.getMessage());
 		} catch (ModelAlreadyExistsException e) {
-			resultModel = service().errorModel(ALREADY_EXISTS);
+			resultModel = blogService.errorModel(ALREADY_EXISTS);
 		}
 
 		return jsonHelper.getResponse(resultModel);
 	}
 
 	public Result findById(String id) {
-		return super.findById(id);
+		return jsonHelper.getResponse(simple.findById(id));
 	}
 
 	public Result findAll() {
 		List<BlogDTO> blogs = new ArrayList<>();
 		
 		try {
-			blogs = service().findAll();
+			blogs = blogService.findAll();
 		} catch (BlogOnlyOneInstanceAllowedException e) {
-			blogs = ImmutableList.of(service().errorModel(ACTION_NOT_ALLOWED,e.getMessage()));
+			blogs = ImmutableList.of(blogService.errorModel(ACTION_NOT_ALLOWED,e.getMessage()));
 		}
 		
 		return jsonHelper.getResponses(blogs, BlogDTO.class);
 	}
 
 	public Result update(String id) {
-		//TODO transform dto to model
-		return super.update(id);
+		RequestBody body = request().body();
+		return jsonHelper.getResponse(simple.update(jsonHelper.extractModel(body,BlogDTO.class),id));
 	}
 
 	public Result delete(String id) {
-		return super.delete(id);
+		return jsonHelper.getResponse(simple.delete(id));
 	}
 
 	public void setJsonHelper(JsonHelper jsonHelper) {
 		this.jsonHelper = jsonHelper;
 	}
-	
-	@Override
-	protected BlogService service() {
-		return blogService;
-	}
 
 	public void setBlogService(BlogService blogService) {
 		this.blogService = blogService;
+	}
+	
+	public void setSimple(SimpleController<BlogDTO, Blog, BlogService> simple) {
+		this.simple = simple;
 	}
 }

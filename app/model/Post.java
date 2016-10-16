@@ -63,22 +63,11 @@ public class Post extends BaseModel implements Serializable{
 	private Boolean noPost;
 	private Map<String,String> attributes;
 	
-	@NotSaved
-	@Transient
-	private Boolean hasPreviousPage;
-	
-	
 	public Map<String, String> getAttributes() {
 		return attributes;
 	}
 	public void setAttributes(Map<String, String> attributes) {
 		this.attributes = attributes;
-	}
-	public Boolean getHasPreviousPage() {
-		return hasPreviousPage;
-	}
-	public void setHasPreviousPage(Boolean hasPreviousPage) {
-		this.hasPreviousPage = hasPreviousPage;
 	}
 	public Boolean getNoPost() {
 		return noPost;

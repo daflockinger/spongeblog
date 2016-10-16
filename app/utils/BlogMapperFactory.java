@@ -29,8 +29,6 @@ public class BlogMapperFactory {
 		registerBlogMapper();
 		registerCategoryMapper();
 		registerKeywordMapper();
-		registerLoginCredentialMapper();
-		registerLoginResultMapper();
 		registerPaginationMapper();
 		registerPaginationQueryMapper();
 		registerPostMapper();
@@ -52,17 +50,7 @@ public class BlogMapperFactory {
 		mapperFactory.classMap(BlogDTO.class, Blog.class).byDefault().register();
 	}
 
-	private void registerLoginCredentialMapper() {
-
-	}
-
-	private void registerLoginResultMapper() {
-
-	}
-
 	private void registerPaginationMapper() {
-		//mapperFactory.classMap(Pagi.class, BlogDTO.class).byDefault().register();
-	//	mapperFactory.classMap(BlogDTO.class, Blog.class).byDefault().register();
 	}
 
 	private void registerPaginationQueryMapper() {

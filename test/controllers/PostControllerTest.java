@@ -11,6 +11,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
 
 import dao.PostDAO;
@@ -20,25 +21,30 @@ import model.Post;
 import model.PostStatus;
 import play.libs.Json;
 import play.mvc.Http.RequestBuilder;
+import play.test.WithApplication;
 import play.mvc.Result;
 import services.PostService;
 import utils.BlogMapperFactory;
 
-public class PostControllerTest extends BaseControllerTest<PostController, PostService, PostDAO, PostDTO,Post> {
+public class PostControllerTest extends WithApplication{
 
 	private Post testPost1;
 	private Post insertPost;
+	protected JsonNode insertNode;
+	protected JsonNode updateNode;
+	protected String params;
+	
+	protected String routePath;
+	protected String testId;
+
+	protected PostDAO dao;
+
 
 	@Before
 	public void setup() {
 		routePath = "/api/v1/posts";
 
 		dao = new PostDAO();
-		service = new PostService();
-		service.setDao(dao);
-		service.setMapperFactory(new BlogMapperFactory());
-		controller = new PostController();
-		controller.setService(service);
 
 		testPost1 = new Post();
 		testPost1.setTitle("Test Post");
@@ -76,12 +82,21 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 
 	@Test
 	public void testCreate_withNotValid() {
-		super.testCreate_withNotValid();
+		RequestBuilder request = new RequestBuilder().method("POST")
+	            .bodyText("invalid")
+	            .uri(routePath);
+	    Result result = route(request);
+	    assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
 	}
 
 	@Test
 	public void testCreate_withValid() {
-		super.testCreate_withValid();
+		RequestBuilder request = new RequestBuilder().method("POST")
+	            .bodyJson(insertNode)
+	            .uri(routePath);
+	    Result result = route(request);	  
+	    
+	    assertTrue(result.status() == HttpStatus.SC_CREATED);
 		Post newPost = dao.find(dao.createQuery().filter("title", "New Post")).asList().get(0);
 
 		assertNotNull(newPost);
@@ -93,7 +108,12 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 
 	@Test
 	public void testUpdate_withNotValid() {
-		super.testUpdate_withNotValid();
+		RequestBuilder request = new RequestBuilder().method("PUT")
+				.bodyText("invalid")
+	            .uri(routePath + "/12345678");
+	    Result result = route(request);
+	    
+	    assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
 	}
 	
 	
@@ -107,7 +127,7 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 		invalidPost.setId(testPost1.getId());
 		
 		
-		Result result = super.testUpdate_withValidationError(Json.toJson(invalidPost));
+		Result result = testUpdate_withValidationError(Json.toJson(invalidPost));
 
 		assertTrue(result.status() == HttpStatus.SC_OK);
 	}
@@ -121,7 +141,7 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 		invalidPost.setPostStatus(PostStatus.PRIVATE);
 		invalidPost.setId(testPost1.getId());
 		
-		Result result = super.testUpdate_withValidationError(Json.toJson(invalidPost));
+		Result result = testUpdate_withValidationError(Json.toJson(invalidPost));
 
 		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
 		assertTrue(contentAsString(result).contains("user"));
@@ -136,7 +156,7 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 		invalidPost.setPostStatus(PostStatus.PRIVATE);
 		invalidPost.setId(testPost1.getId());
 		
-		Result result = super.testUpdate_withValidationError(Json.toJson(invalidPost));
+		Result result = testUpdate_withValidationError(Json.toJson(invalidPost));
 
 		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
 		assertTrue(contentAsString(result).contains("user"));
@@ -151,7 +171,7 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 		invalidPost.setPostStatus(PostStatus.PRIVATE);
 		invalidPost.setId(testPost1.getId());
 		
-		Result result = super.testUpdate_withValidationError(Json.toJson(invalidPost));
+		Result result = testUpdate_withValidationError(Json.toJson(invalidPost));
 
 		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
 		assertTrue(contentAsString(result).contains("category"));
@@ -166,7 +186,7 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 		invalidPost.setPostStatus(PostStatus.PRIVATE);
 		invalidPost.setId(testPost1.getId());
 		
-		Result result = super.testUpdate_withValidationError(Json.toJson(invalidPost));
+		Result result = testUpdate_withValidationError(Json.toJson(invalidPost));
 
 		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
 		assertTrue(contentAsString(result).contains("category"));
@@ -181,15 +201,29 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 		invalidPost.setPostStatus(null);
 		invalidPost.setId(testPost1.getId());
 		
-		Result result = super.testUpdate_withValidationError(Json.toJson(invalidPost));
+		Result result = testUpdate_withValidationError(Json.toJson(invalidPost));
 
 		assertTrue(result.status() == HttpStatus.SC_BAD_REQUEST);
 		assertTrue(contentAsString(result).contains("postStatus"));
 	}
 	
+	protected Result testUpdate_withValidationError(JsonNode validationFail){
+		RequestBuilder request = new RequestBuilder().method("PUT")
+	            .bodyJson(validationFail)
+	            .uri(routePath + "/" + testId);
+	    Result result = route(request);
+	    
+	    return result;
+	}
+	
 	@Test
 	public void testUpdate_withValid() {
-		super.testUpdate_withValid();
+		RequestBuilder request = new RequestBuilder().method("PUT")
+	            .bodyJson(updateNode)
+	            .uri(routePath + "/" + testId);
+	    Result result = route(request);
+	    
+	    assertTrue(result.status() == HttpStatus.SC_OK);
 
 		Post updated = dao.get(testPost1.getId());
 		assertNotNull(updated);
@@ -200,17 +234,26 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 
 	@Test
 	public void testUpdate_withNotExisting() {
-		super.testUpdate_withNotExisting();
+		RequestBuilder request = new RequestBuilder().method("PUT")
+	            .bodyJson(insertNode)
+	            .uri(routePath + "/1234567890123");
+	    Result result = route(request);
+	    
+	    assertTrue(result.status() == HttpStatus.SC_NOT_FOUND);
 	}
 
 	@Test
 	public void testFindById_withNotValid() {
-		super.testFindById_withNotValid();
+		RequestBuilder request = new RequestBuilder().method("GET")
+	            .uri(routePath  + "/invalid");
+	    Result result = route(request);
+	    
+	    assertTrue(result.status() == HttpStatus.SC_NOT_FOUND);
 	}
 
 	@Test
 	public void testFindById_withValid_() {
-		String response = super.testFindById_withValid();
+		String response = testFindById_withValid();
 		assertTrue(response.contains("Test Post"));
 		assertTrue(response.contains(PostStatus.PUBLIC.toString()));
 		assertTrue(response.contains("original content"));
@@ -218,15 +261,36 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 
 	@Test
 	public void testFindAllInPage_withValid_() {
-		String response = super.testFindAllInPage_withValid();
+		String response = testFindAllInPage_withValid();
 		assertTrue(response.contains("Test Post"));
 		assertTrue(response.contains(PostStatus.PUBLIC.toString()));
 		assertTrue(response.contains("original content"));
 	}
+	
+	protected String testFindById_withValid(){
+		RequestBuilder request = new RequestBuilder().method("GET")
+	            .uri(routePath + "/" + testId);
+	    Result result = route(request);
+	    assertTrue(result.status() == HttpStatus.SC_OK);
+	    return contentAsString(result);
+	}
+	
+	protected String testFindAllInPage_withValid(){
+		RequestBuilder request = new RequestBuilder().method("GET")
+	            .uri(routePath + params);
+	    Result result = route(request);
+	    
+	    assertTrue(result.status() == HttpStatus.SC_OK);
+	    return contentAsString(result);
+	}
 
 	@Test
 	public void testDelete_withNotValid() {
-		super.testDelete_withNotValid();
+		RequestBuilder request = new RequestBuilder().method("DELETE")
+	            .uri(routePath + "/invalid");
+	    Result result = route(request);
+	    
+	    assertTrue(result.status() == HttpStatus.SC_NOT_FOUND);
 	}
 
 	@Test

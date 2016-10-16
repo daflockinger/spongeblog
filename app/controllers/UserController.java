@@ -3,20 +3,45 @@ package controllers;
 import com.google.inject.Inject;
 
 import dto.UserDTO;
+import exceptions.GeneralServiceException;
+import helpers.JsonHelper;
 import model.User;
+import play.mvc.Controller;
+import play.mvc.Http.RequestBody;
+import play.mvc.Result;
 import services.UserService;
 
-public class UserController extends BaseController<UserService, UserDTO, User>{
+public class UserController extends Controller{
 
 	@Inject
-	private UserService service;
-	
-	@Override
-	protected UserService service() {
-		return service;
+	private SimpleController<UserDTO, User, UserService> simple;
+
+	@Inject
+	protected JsonHelper jsonHelper;
+
+	public Result create() {
+		RequestBody body = request().body();
+		return jsonHelper.getResponse(simple.create(jsonHelper.extractModel(body, UserDTO.class)));
 	}
 
-	public void setService(UserService service) {
-		this.service = service;
+	public Result findById(String id) {
+		return jsonHelper.getResponse(simple.findById(id));
+	}
+
+	public Result findAll() throws GeneralServiceException {
+		return jsonHelper.getResponses(simple.findAll(), UserDTO.class);
+	}
+
+	public Result update(String id) {
+		RequestBody body = request().body();
+		return jsonHelper.getResponse(simple.update(jsonHelper.extractModel(body, UserDTO.class), id));
+	}
+
+	public Result delete(String id) {
+		return jsonHelper.getResponse(simple.delete(id));
+	}
+
+	public void setSimple(SimpleController<UserDTO, User, UserService> simple) {
+		this.simple = simple;
 	}
 }
