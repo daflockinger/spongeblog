@@ -11,4 +11,4 @@ services:
 
 before_script:
   - sleep 15
-  - mongo spongeblog --eval 'db.addUser("root", "flo");'
+  - mongo test --eval 'db.createUser({user:"root4", pwd:"flo",roles:[{ role: "readWrite", db: "test" }]});'
