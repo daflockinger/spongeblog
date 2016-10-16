@@ -3,11 +3,12 @@ package dto;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
-@JsonTypeInfo(include=As.WRAPPER_OBJECT, use=Id.NAME)
 public class BlogDTO extends BaseDTO{
 
 	private String name;

@@ -4,11 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-
-@JsonTypeInfo(include=As.WRAPPER_OBJECT, use=Id.NAME)
 public class PostDTO extends BaseDTO {
 	private String user;
 	private Date created;

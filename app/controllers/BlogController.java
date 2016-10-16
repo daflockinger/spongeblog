@@ -53,11 +53,11 @@ public class BlogController extends Controller {
 			resultModel = blogService.errorModel(ALREADY_EXISTS);
 		}
 
-		return jsonHelper.getResponse(resultModel);
+		return jsonHelper.getResponse(resultModel,BlogDTO.class);
 	}
 
 	public Result findById(String id) {
-		return jsonHelper.getResponse(simple.findById(id));
+		return jsonHelper.getResponse(simple.findById(id),BlogDTO.class);
 	}
 
 	public Result findAll() {
@@ -74,11 +74,11 @@ public class BlogController extends Controller {
 
 	public Result update(String id) {
 		RequestBody body = request().body();
-		return jsonHelper.getResponse(simple.update(jsonHelper.extractModel(body,BlogDTO.class),id));
+		return jsonHelper.getResponse(simple.update(jsonHelper.extractModel(body,BlogDTO.class),id),BlogDTO.class);
 	}
 
 	public Result delete(String id) {
-		return jsonHelper.getResponse(simple.delete(id));
+		return jsonHelper.getResponse(simple.delete(id),BlogDTO.class);
 	}
 
 	public void setJsonHelper(JsonHelper jsonHelper) {

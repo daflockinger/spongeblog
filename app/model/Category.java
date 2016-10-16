@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 @Indexes({
 	@Index(fields = @Field(value="name"), options=@IndexOptions(unique=true))
 })
-@JsonTypeInfo(include=As.WRAPPER_OBJECT, use=Id.NAME)
 public class Category extends BaseModel implements Serializable{
 
 	private static final long serialVersionUID = 1L;

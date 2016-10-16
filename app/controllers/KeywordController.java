@@ -21,11 +21,11 @@ public class KeywordController extends Controller{
 
 	public Result create() {
 		RequestBody body = request().body();
-		return jsonHelper.getResponse(simple.create(jsonHelper.extractModel(body, KeywordDTO.class)));
+		return jsonHelper.getResponse(simple.create(jsonHelper.extractModel(body, KeywordDTO.class)), KeywordDTO.class);
 	}
 
 	public Result findById(String id) {
-		return jsonHelper.getResponse(simple.findById(id));
+		return jsonHelper.getResponse(simple.findById(id), KeywordDTO.class);
 	}
 
 	public Result findAll() throws GeneralServiceException {
@@ -33,12 +33,12 @@ public class KeywordController extends Controller{
 	}
 
 	public Result update(String id) {
-		RequestBody body = request().body();
-		return jsonHelper.getResponse(simple.update(jsonHelper.extractModel(body, KeywordDTO.class), id));
+		RequestBody body = request().body();		
+		return jsonHelper.getResponse(simple.update(jsonHelper.extractModel(body, KeywordDTO.class), id), KeywordDTO.class);
 	}
 
 	public Result delete(String id) {
-		return jsonHelper.getResponse(simple.delete(id));
+		return jsonHelper.getResponse(simple.delete(id), KeywordDTO.class);
 	}
 
 	public void setSimple(SimpleController<KeywordDTO, Keyword, KeywordService> simple) {

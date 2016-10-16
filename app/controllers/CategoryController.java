@@ -21,11 +21,12 @@ public class CategoryController extends Controller {
 
 	public Result create() {
 		RequestBody body = request().body();
-		return jsonHelper.getResponse(simple.create(jsonHelper.extractModel(body, CategoryDTO.class)));
+		return jsonHelper.getResponse(simple.create(jsonHelper.extractModel(body, CategoryDTO.class)),
+				CategoryDTO.class);
 	}
 
 	public Result findById(String id) {
-		return jsonHelper.getResponse(simple.findById(id));
+		return jsonHelper.getResponse(simple.findById(id), CategoryDTO.class);
 	}
 
 	public Result findAll() throws GeneralServiceException {
@@ -34,11 +35,12 @@ public class CategoryController extends Controller {
 
 	public Result update(String id) {
 		RequestBody body = request().body();
-		return jsonHelper.getResponse(simple.update(jsonHelper.extractModel(body, CategoryDTO.class), id));
+		return jsonHelper.getResponse(simple.update(jsonHelper.extractModel(body, CategoryDTO.class), id),
+				CategoryDTO.class);
 	}
 
 	public Result delete(String id) {
-		return jsonHelper.getResponse(simple.delete(id));
+		return jsonHelper.getResponse(simple.delete(id), CategoryDTO.class);
 	}
 
 	public void setSimple(SimpleController<CategoryDTO, Category, CategoryService> simple) {

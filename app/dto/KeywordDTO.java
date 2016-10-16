@@ -1,10 +1,5 @@
 package dto;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-
-@JsonTypeInfo(include=As.WRAPPER_OBJECT, use=Id.NAME)
 public class KeywordDTO extends BaseDTO {
 	private String name;
 	private Integer popularity;

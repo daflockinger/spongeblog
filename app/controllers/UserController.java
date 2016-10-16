@@ -2,6 +2,7 @@ package controllers;
 
 import com.google.inject.Inject;
 
+import dto.PostDTO;
 import dto.UserDTO;
 import exceptions.GeneralServiceException;
 import helpers.JsonHelper;
@@ -21,11 +22,11 @@ public class UserController extends Controller{
 
 	public Result create() {
 		RequestBody body = request().body();
-		return jsonHelper.getResponse(simple.create(jsonHelper.extractModel(body, UserDTO.class)));
+		return jsonHelper.getResponse(simple.create(jsonHelper.extractModel(body, UserDTO.class)), UserDTO.class);
 	}
 
 	public Result findById(String id) {
-		return jsonHelper.getResponse(simple.findById(id));
+		return jsonHelper.getResponse(simple.findById(id), UserDTO.class);
 	}
 
 	public Result findAll() throws GeneralServiceException {
@@ -34,11 +35,11 @@ public class UserController extends Controller{
 
 	public Result update(String id) {
 		RequestBody body = request().body();
-		return jsonHelper.getResponse(simple.update(jsonHelper.extractModel(body, UserDTO.class), id));
+		return jsonHelper.getResponse(simple.update(jsonHelper.extractModel(body, UserDTO.class), id), UserDTO.class);
 	}
 
 	public Result delete(String id) {
-		return jsonHelper.getResponse(simple.delete(id));
+		return jsonHelper.getResponse(simple.delete(id), UserDTO.class);
 	}
 
 	public void setSimple(SimpleController<UserDTO, User, UserService> simple) {

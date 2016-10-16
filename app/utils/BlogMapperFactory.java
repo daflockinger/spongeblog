@@ -2,15 +2,19 @@ package utils;
 
 import com.google.inject.Singleton;
 
+import dto.BaseDTO;
 import dto.BlogDTO;
 import dto.CategoryDTO;
+import dto.KeywordDTO;
 import dto.PostDTO;
 import dto.UserDTO;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import model.BaseModel;
 import model.Blog;
 import model.Category;
+import model.Keyword;
 import model.Post;
 import model.User;
 
@@ -24,8 +28,10 @@ public class BlogMapperFactory {
 	}
 
 	public BlogMapperFactory() {
-		mapperFactory = new DefaultMapperFactory.Builder().build();
+		mapperFactory = new DefaultMapperFactory.Builder()
+				.compilerStrategy(new ExtendedJavaassistCompilerStrategy()).build();
 		
+		registerBaseMapper();
 		registerBlogMapper();
 		registerCategoryMapper();
 		registerKeywordMapper();
@@ -35,6 +41,10 @@ public class BlogMapperFactory {
 		registerUserMapper();
 	}
 
+	private void registerBaseMapper() {
+		mapperFactory.classMap(BaseModel.class, BaseDTO.class).byDefault().register();
+		mapperFactory.classMap(BaseDTO.class, BaseModel.class).byDefault().register();
+	}
 	private void registerBlogMapper() {
 		mapperFactory.classMap(Blog.class, BlogDTO.class).byDefault().register();
 		mapperFactory.classMap(BlogDTO.class, Blog.class).byDefault().register();
@@ -46,8 +56,8 @@ public class BlogMapperFactory {
 	}
 
 	private void registerKeywordMapper() {
-		mapperFactory.classMap(Blog.class, BlogDTO.class).byDefault().register();
-		mapperFactory.classMap(BlogDTO.class, Blog.class).byDefault().register();
+		mapperFactory.classMap(Keyword.class, KeywordDTO.class).byDefault().register();
+		mapperFactory.classMap(KeywordDTO.class, Keyword.class).byDefault().register();
 	}
 
 	private void registerPaginationMapper() {

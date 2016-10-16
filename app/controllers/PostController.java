@@ -28,12 +28,12 @@ public class PostController extends Controller {
 	private PaginationMapper mapper;
 
 	public Result findById(String id) {
-		return jsonHelper.getResponse(service.findByTitle(id));
+		return jsonHelper.getResponse(service.findByTitle(id), PostDTO.class);
 	}
 
 	public Result create() {
 		RequestBody body = request().body();
-		return jsonHelper.getResponse(simple.create(jsonHelper.extractModel(body, PostDTO.class)));
+		return jsonHelper.getResponse(simple.create(jsonHelper.extractModel(body, PostDTO.class)), PostDTO.class);
 	}
 
 	private Result findAllInPage(PaginationDTO settings) {
@@ -52,11 +52,11 @@ public class PostController extends Controller {
 
 	public Result update(String id) {
 		RequestBody body = request().body();
-		return jsonHelper.getResponse(simple.update(jsonHelper.extractModel(body, PostDTO.class), id));
+		return jsonHelper.getResponse(simple.update(jsonHelper.extractModel(body, PostDTO.class), id), PostDTO.class);
 	}
 
 	public Result delete(String id) {
-		return jsonHelper.getResponse(simple.delete(id));
+		return jsonHelper.getResponse(simple.delete(id), PostDTO.class);
 	}
 
 	public void setSimple(SimpleController<PostDTO, Post, PostService> simple) {

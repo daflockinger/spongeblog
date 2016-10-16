@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 import model.Category;
 
-@JsonTypeInfo(include=As.WRAPPER_OBJECT, use=Id.NAME)
 public class CategoryDTO extends BaseDTO{
 	
 	private String name;

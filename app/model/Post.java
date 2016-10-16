@@ -35,7 +35,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 	@Index(fields = {@Field(value="postStatus")}),
 	@Index(fields = {@Field(value="postStatus"), @Field(value="category")})
 })
-@JsonTypeInfo(include=As.WRAPPER_OBJECT, use=Id.NAME)
 public class Post extends BaseModel implements Serializable{
 
 	private static final long serialVersionUID = 1L;

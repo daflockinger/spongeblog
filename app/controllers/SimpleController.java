@@ -23,6 +23,7 @@ public class SimpleController<M extends BaseDTO, N extends BaseModel, T extends 
 	private T service;
 	
 	public M create(M model){
+		
 		M resultModel;
 
 		if (model == null) {

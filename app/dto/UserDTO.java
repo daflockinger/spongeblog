@@ -3,11 +3,6 @@ package dto;
 import java.util.Date;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-
-@JsonTypeInfo(include=As.WRAPPER_OBJECT, use=Id.NAME)
 public class UserDTO extends BaseDTO {
 	private String login;
 	private String password;

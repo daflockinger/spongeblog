@@ -49,26 +49,16 @@ public class JsonHelper {
 
 		if (isBodyValidJson(body)) {
 			try {
-				model = mapper.treeToValue(tempFixJsonRootNameToFirstLetterUpperCase(body.asJson(), modelClass),
-						modelClass);
+				if(body.asJson().elements().next().isContainerNode()){
+					model = mapper.treeToValue(body.asJson().elements().next(),modelClass);
+				} else {
+					model = mapper.treeToValue(body.asJson(), modelClass);
+				}
 			} catch (JsonProcessingException jsonException) {
 				Logger.error("Error processing json: ", jsonException);
 			}
 		}
 		return model;
-	}
-
-	private <U> JsonNode tempFixJsonRootNameToFirstLetterUpperCase(JsonNode inNode, Class<U> modelClass) {
-		String stringified = inNode.toString();
-		String jsonModelName = modelClass.getSimpleName().replace("DTO", "");
-		
-		if(stringified.contains(jsonModelName)){
-			stringified = stringified.replaceFirst(jsonModelName, modelClass.getSimpleName());
-		} else {
-			stringified = stringified.replaceFirst(jsonModelName.toLowerCase(), modelClass.getSimpleName());
-		}
-		
-		return Json.parse(stringified);
 	}
 
 	private boolean isBodyValidJson(RequestBody body) {
@@ -88,6 +78,15 @@ public class JsonHelper {
 		}
 		return status;
 	}
+	
+	public <T extends BaseDTO> Result getResponse(T result, Class<T> type) {
+		Result status = Controller.status(result.getStatus());
+
+		if (result != null) {
+			status = Controller.status(result.getStatus(), Json.toJson(wrapObjectForJson(result,type)));
+		}
+		return status;
+	}
 
 	public <T extends BaseDTO> Result getResponses(List<T> results, Class<T> type) {
 		Integer status = HttpStatus.SC_OK;
@@ -99,8 +98,12 @@ public class JsonHelper {
 		return Controller.status(status, Json.toJson(wrapListForJson(results, type)));
 	}
 
+	public <T extends BaseDTO> Map<String, T> wrapObjectForJson(T result, Class<T> type) {
+		return Collections.singletonMap(type.getSimpleName().replaceFirst("DTO", "").toLowerCase(), result);
+	}
+	
 	public <T extends BaseDTO> Map<String, List<T>> wrapListForJson(List<T> results, Class<T> type) {
-		return Collections.singletonMap(type.getSimpleName(), results);
+		return Collections.singletonMap(type.getSimpleName().replaceFirst("DTO", "").toLowerCase(), results);
 	}
 
 	private static class ObjectIdSerializer extends JsonSerializer<ObjectId> {

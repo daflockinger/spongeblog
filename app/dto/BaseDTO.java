@@ -3,9 +3,15 @@ package dto;
 import org.apache.http.HttpStatus;
 import org.bson.types.ObjectId;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import utils.ObjectIdSerializer;
+
 public class BaseDTO {
 
+	@JsonSerialize(using = ObjectIdSerializer.class)
 	private ObjectId id ;
+	
 	private String errorMessage;
 	private Integer status = HttpStatus.SC_OK;
 	

@@ -16,6 +16,7 @@ import exceptions.GeneralServiceException;
 import exceptions.ModelNotFoundException;
 import ma.glasnost.orika.MapperFacade;
 import model.BaseModel;
+import model.Keyword;
 import play.Logger;
 import utils.BlogMapperFactory;
 
@@ -37,7 +38,6 @@ public abstract class BaseServiceImpl<N extends BaseModel, M extends BaseDTO, T 
 	}
 
 	public M create(M dto) throws GeneralServiceException{
-
 		if (dto == null || (dto != null && isNotUnique(dto))) {
 			throw new ModelNotFoundException(getModelClass().getSimpleName());
 		}

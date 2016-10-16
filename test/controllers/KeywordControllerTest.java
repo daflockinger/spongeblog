@@ -94,7 +94,7 @@ public class KeywordControllerTest extends WithApplication {
 	    
 	    assertTrue(result.status() == HttpStatus.SC_CREATED);
 		Keyword newKeyword = dao.find(dao.createQuery().filter("name", "New Keyword")).asList().get(0);
-
+		
 		assertNotNull(newKeyword);
 		assertEquals("New Keyword", newKeyword.getName());
 		assertTrue(newKeyword.getPopularity() == 99);
