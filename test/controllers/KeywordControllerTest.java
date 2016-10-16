@@ -12,12 +12,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import dao.KeywordDAO;
+import dto.KeywordDTO;
 import model.Keyword;
 import play.libs.Json;
 import play.mvc.Result;
 import services.KeywordService;
+import utils.BlogMapperFactory;
 
-public class KeywordControllerTest extends BaseControllerTest<KeywordController, KeywordService, KeywordDAO, Keyword> {
+public class KeywordControllerTest extends BaseControllerTest<KeywordController, KeywordService, KeywordDAO, KeywordDTO, Keyword> {
 
 	private Keyword testKeyword1;
 	private Keyword insertKeyword;
@@ -29,6 +31,7 @@ public class KeywordControllerTest extends BaseControllerTest<KeywordController,
 		dao = new KeywordDAO();
 		service = new KeywordService();
 		service.setDao(dao);
+		service.setMapperFactory(new BlogMapperFactory());
 		controller = new KeywordController();
 		controller.setService(service);
 

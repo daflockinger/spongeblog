@@ -23,7 +23,9 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.google.inject.Singleton;
 
+import dto.BaseDTO;
 import model.BaseModel;
 import play.Logger;
 import play.libs.Json;
@@ -31,6 +33,7 @@ import play.mvc.Controller;
 import play.mvc.Http.RequestBody;
 import play.mvc.Result;
 
+@Singleton
 public class JsonHelper {
 	protected ObjectMapper mapper;
 
@@ -57,8 +60,15 @@ public class JsonHelper {
 
 	private <U> JsonNode tempFixJsonRootNameToFirstLetterUpperCase(JsonNode inNode, Class<U> modelClass) {
 		String stringified = inNode.toString();
-
-		return Json.parse(stringified.replaceFirst(modelClass.getSimpleName().toLowerCase(), modelClass.getSimpleName()));
+		String jsonModelName = modelClass.getSimpleName().replace("DTO", "");
+		
+		if(stringified.contains(jsonModelName)){
+			stringified = stringified.replaceFirst(jsonModelName, modelClass.getSimpleName());
+		} else {
+			stringified = stringified.replaceFirst(jsonModelName.toLowerCase(), modelClass.getSimpleName());
+		}
+		
+		return Json.parse(stringified);
 	}
 
 	private boolean isBodyValidJson(RequestBody body) {
@@ -70,7 +80,7 @@ public class JsonHelper {
 				.withHeader("Access-Control-Allow-Origin", "*");
 	}
 
-	public <T extends BaseModel> Result getResponse(T result) {
+	public <T extends BaseDTO> Result getResponse(T result) {
 		Result status = Controller.status(result.getStatus());
 
 		if (result != null) {
@@ -79,7 +89,7 @@ public class JsonHelper {
 		return status;
 	}
 
-	public <T extends BaseModel> Result getResponses(List<T> results, Class<T> type) {
+	public <T extends BaseDTO> Result getResponses(List<T> results, Class<T> type) {
 		Integer status = HttpStatus.SC_OK;
 		Optional<T> result = results.stream().findAny();
 
@@ -89,7 +99,7 @@ public class JsonHelper {
 		return Controller.status(status, Json.toJson(wrapListForJson(results, type)));
 	}
 
-	public <T extends BaseModel> Map<String, List<T>> wrapListForJson(List<T> results, Class<T> type) {
+	public <T extends BaseDTO> Map<String, List<T>> wrapListForJson(List<T> results, Class<T> type) {
 		return Collections.singletonMap(type.getSimpleName(), results);
 	}
 

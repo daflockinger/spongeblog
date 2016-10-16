@@ -6,6 +6,7 @@ public enum RestError {
 	VALIDATION_FAILED("Validation error ",HttpStatus.SC_BAD_REQUEST),
 	INVALID_JSON("Invalid/Malformed Json",HttpStatus.SC_BAD_REQUEST),
 	ALREADY_EXISTS("Entity already exists",HttpStatus.SC_CONFLICT),
+	ACTION_NOT_ALLOWED("Action not allwed",HttpStatus.SC_CONFLICT),
 	NOT_FOUND("Entity not found",HttpStatus.SC_NOT_FOUND),
 	UNAUTHORIZED("Username or password is not valid",HttpStatus.SC_FORBIDDEN);
 	

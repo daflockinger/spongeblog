@@ -2,7 +2,7 @@ package dto;
 
 import java.util.Map;
 
-public class PaginationDTO {
+public class PaginationDTO extends BaseDTO {
 	private int page;
 	private int limit;
 	private String sortBy;

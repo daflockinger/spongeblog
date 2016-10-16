@@ -9,14 +9,19 @@ import org.mongodb.morphia.VerboseJSR303ConstraintViolationException;
 
 import com.google.inject.Inject;
 
+import dto.BaseDTO;
+import dto.RestError;
+import exceptions.GeneralServiceException;
+import exceptions.ModelAlreadyExistsException;
 import helpers.JsonHelper;
 import model.BaseModel;
 import play.mvc.Controller;
 import play.mvc.Http.RequestBody;
 import play.mvc.Result;
 import services.BaseService;
+import utils.BlogMapperFactory;
 
-public abstract class BaseController<T extends BaseService<M>, M extends BaseModel> extends Controller {
+public abstract class BaseController<T extends BaseService<M,N>, M extends BaseDTO, N extends BaseModel> extends Controller {
 
 	@Inject
 	protected JsonHelper jsonHelper;
@@ -25,7 +30,7 @@ public abstract class BaseController<T extends BaseService<M>, M extends BaseMod
 
 	public Result create() {
 		RequestBody body = request().body();
-		M model = jsonHelper.extractModel(body, service().getModelClass());
+		M model = jsonHelper.extractModel(body, service().getDTOClass());
 		M resultModel;
 
 		if (model == null) {
@@ -36,6 +41,8 @@ public abstract class BaseController<T extends BaseService<M>, M extends BaseMod
 			resultModel = service().create(model);
 		} catch (VerboseJSR303ConstraintViolationException validationException) {
 			resultModel = service().errorModel(VALIDATION_FAILED,validationException.getMessage());
+		} catch (GeneralServiceException e) {
+			resultModel = service().errorModel(RestError.ALREADY_EXISTS, service().getModelClass().getSimpleName());
 		}
 
 		return jsonHelper.getResponse(resultModel);
@@ -43,21 +50,29 @@ public abstract class BaseController<T extends BaseService<M>, M extends BaseMod
 
 	public Result findById(String id) {
 		ObjectId mongoId = null;
+		M model = null;
 
 		if (ObjectId.isValid(id)) {
 			mongoId = new ObjectId(id);
 		}
-		return jsonHelper.getResponse(service().findById(mongoId));
+		
+		try {
+			model = service().findById(mongoId);
+		} catch (GeneralServiceException e) {
+			model = service().errorModel(RestError.NOT_FOUND, service().getModelClass().getSimpleName());
+		}
+		
+		return jsonHelper.getResponse(model);
 	}
 
-	public Result findAll() {
-		return jsonHelper.getResponses(service().findAll(), service().getModelClass());
+	public Result findAll() throws GeneralServiceException{
+		return jsonHelper.getResponses(service().findAll(), service().getDTOClass());
 	}
 
 	public Result update(String id) {
 		RequestBody body = request().body();
-		M model = jsonHelper.extractModel(body, service().getModelClass());
-		M resultModel;
+		M model = jsonHelper.extractModel(body, service().getDTOClass());
+		M resultModel = null;
 
 		if (model == null) {
 			return jsonHelper.getInvalidJsonMessage(service().errorModel(INVALID_JSON));
@@ -69,6 +84,8 @@ public abstract class BaseController<T extends BaseService<M>, M extends BaseMod
 			resultModel = service().update(model);
 		} catch (VerboseJSR303ConstraintViolationException validationException) {
 			resultModel = service().errorModel(VALIDATION_FAILED,validationException.getMessage());
+		} catch (GeneralServiceException e) {
+			resultModel = service().errorModel(RestError.NOT_FOUND, service().getModelClass().getSimpleName());
 		}
 		
 		return jsonHelper.getResponse(resultModel);
@@ -76,10 +93,17 @@ public abstract class BaseController<T extends BaseService<M>, M extends BaseMod
 
 	public Result delete(String id) {
 		ObjectId mongoId = null;
+		M model = null;
 		if (ObjectId.isValid(id)) {
 			mongoId = new ObjectId(id);
 		}
-		return jsonHelper.getResponse(service().delete(mongoId));
+		
+		try {
+			model = service().delete(mongoId);
+		} catch (GeneralServiceException e) {
+			model = service().errorModel(RestError.NOT_FOUND, service().getModelClass().getSimpleName());
+		}
+		return jsonHelper.getResponse(model);
 	}
 
 	public void setJsonHelper(JsonHelper jsonHelper) {

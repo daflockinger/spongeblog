@@ -12,13 +12,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import dao.UserDAO;
+import dto.UserDTO;
 import model.User;
 import model.UserStatus;
 import play.libs.Json;
 import play.mvc.Result;
 import services.UserService;
+import utils.BlogMapperFactory;
 
-public class UserControllerTest extends BaseControllerTest<UserController, UserService, UserDAO, User> {
+public class UserControllerTest extends BaseControllerTest<UserController, UserService, UserDAO, UserDTO,User> {
 
 	private User testUser1;
 	private User insertUser;
@@ -30,6 +32,7 @@ public class UserControllerTest extends BaseControllerTest<UserController, UserS
 		dao = new UserDAO();
 		service = new UserService();
 		service.setDao(dao);
+		service.setMapperFactory(new BlogMapperFactory());
 		controller = new UserController();
 		controller.setService(service);
 

@@ -3,15 +3,16 @@ package services;
 import com.google.inject.Inject;
 
 import dao.CategoryDAO;
+import dto.CategoryDTO;
 import model.Category;
 
-public class CategoryService extends BaseServiceImpl<Category, CategoryDAO> {
+public class CategoryService extends BaseServiceImpl<Category, CategoryDTO, CategoryDAO> {
 
 	@Inject
 	private CategoryDAO dao;
 	
 	@Override
-	protected boolean isNotUnique(Category model) {
+	protected boolean isNotUnique(CategoryDTO model) {
 		return dao().exists(dao().createQuery().filter("name", model.getName()));
 	}
 
@@ -27,5 +28,10 @@ public class CategoryService extends BaseServiceImpl<Category, CategoryDAO> {
 	
 	public void setDao(CategoryDAO dao){
 		this.dao = dao;
+	}
+
+	@Override
+	public Class<CategoryDTO> getDTOClass() {
+		return CategoryDTO.class;
 	}
 }

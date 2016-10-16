@@ -8,12 +8,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.google.common.collect.ImmutableList;
 
 import dao.PostDAO;
+import dto.PostDTO;
+import exceptions.ModelNotFoundException;
 import model.Post;
 import model.PostStatus;
 import play.test.WithApplication;
+import utils.BlogMapperFactory;
 
 public class PostServiceTest extends WithApplication {
 	private PostDAO dao;
@@ -26,6 +30,7 @@ public class PostServiceTest extends WithApplication {
 		dao = new PostDAO();
 		service = new PostService();
 		service.setDao(dao);
+		service.setMapperFactory(new BlogMapperFactory());
 
 		testPost1 = new Post();
 		testPost1.setCategory("cat 1");
@@ -40,8 +45,8 @@ public class PostServiceTest extends WithApplication {
 	}
 	
 	@Test
-	public void testDelete_withExistingId_shouldSetStatusToDelete(){
-		Post result =  service.delete(testPost1.getId());
+	public void testDelete_withExistingId_shouldSetStatusToDelete() throws ModelNotFoundException{
+		PostDTO result =  service.delete(testPost1.getId());
 		
 		assertNotNull(result);
 		assertTrue(result.getStatus() == HttpStatus.SC_OK);
@@ -51,9 +56,9 @@ public class PostServiceTest extends WithApplication {
 		assertEquals(PostStatus.DELETED, deletedPost.getPostStatus());
 	}
 	
-	@Test
-	public void testDelete_withNotExistingId_shouldReturnNotFound(){
-		Post result = service.delete(null);
+	@Test(expected=ModelNotFoundException.class)
+	public void testDelete_withNotExistingId_shouldReturnNotFound() throws ModelNotFoundException{
+		PostDTO result = service.delete(null);
 		assertTrue(result.getStatus() == HttpStatus.SC_NOT_FOUND);
 	}
 	

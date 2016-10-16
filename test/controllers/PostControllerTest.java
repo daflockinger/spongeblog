@@ -15,14 +15,16 @@ import com.google.common.collect.ImmutableMap;
 
 import dao.PostDAO;
 import dto.PaginationDTO;
+import dto.PostDTO;
 import model.Post;
 import model.PostStatus;
 import play.libs.Json;
 import play.mvc.Http.RequestBuilder;
 import play.mvc.Result;
 import services.PostService;
+import utils.BlogMapperFactory;
 
-public class PostControllerTest extends BaseControllerTest<PostController, PostService, PostDAO, Post> {
+public class PostControllerTest extends BaseControllerTest<PostController, PostService, PostDAO, PostDTO,Post> {
 
 	private Post testPost1;
 	private Post insertPost;
@@ -34,6 +36,7 @@ public class PostControllerTest extends BaseControllerTest<PostController, PostS
 		dao = new PostDAO();
 		service = new PostService();
 		service.setDao(dao);
+		service.setMapperFactory(new BlogMapperFactory());
 		controller = new PostController();
 		controller.setService(service);
 

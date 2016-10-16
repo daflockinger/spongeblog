@@ -17,13 +17,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import dao.BlogDAO;
+import dto.BlogDTO;
 import model.Blog;
 import model.BlogStatus;
 import play.libs.Json;
 import play.mvc.Result;
 import services.BlogService;
+import utils.BlogMapperFactory;
 
-public class BlogControllerTest extends BaseControllerTest<BlogController, BlogService, BlogDAO, Blog> {
+public class BlogControllerTest extends BaseControllerTest<BlogController, BlogService, BlogDAO, BlogDTO,Blog> {
 
 	private Blog testBlog1;
 	private Blog insertBlog;
@@ -35,6 +37,7 @@ public class BlogControllerTest extends BaseControllerTest<BlogController, BlogS
 		dao = new BlogDAO();
 		service = new BlogService();
 		service.setDao(dao);
+		service.setMapperFactory(new BlogMapperFactory());
 		controller = new BlogController();
 		controller.setBlogService(service);
 
@@ -70,6 +73,7 @@ public class BlogControllerTest extends BaseControllerTest<BlogController, BlogS
 
 	@Test
 	public void testCreate_withValid() {
+		dao.deleteById(testBlog1.getId());
 		super.testCreate_withValid();
 		Blog newBlog = dao.find(dao.createQuery().filter("name", "New BLog")).asList().get(0);
 

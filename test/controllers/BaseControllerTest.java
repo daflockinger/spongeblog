@@ -10,13 +10,14 @@ import org.bson.types.ObjectId;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import dao.ExtendedDAO;
+import dto.BaseDTO;
 import model.BaseModel;
 import play.mvc.Http.RequestBuilder;
 import play.mvc.Result;
 import play.test.WithApplication;
 import services.BaseService;
 
-public class BaseControllerTest<C extends BaseController<S, M>, S extends BaseService<M>, D extends ExtendedDAO<M, ObjectId>, M extends BaseModel>
+public class BaseControllerTest<C extends BaseController<S, M, N>, S extends BaseService<M,N>, D extends ExtendedDAO<N, ObjectId>, M extends BaseDTO, N extends BaseModel>
 		extends WithApplication {
 
 	protected C controller;

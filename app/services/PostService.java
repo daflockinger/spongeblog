@@ -12,28 +12,32 @@ import com.google.inject.Inject;
 
 import dao.PostDAO;
 import dto.PaginationDTO;
+import dto.PostDTO;
+import exceptions.ModelNotFoundException;
 import model.Post;
 import model.PostStatus;
 
-public class PostService extends PaginationServiceImpl<Post, PostDAO> {
+public class PostService extends PaginationServiceImpl<PostDTO,Post, PostDAO> {
 
 	@Inject
 	private PostDAO dao;
 
 	@Override
-	public Post delete(ObjectId id) {
+	public PostDTO delete(ObjectId id) throws ModelNotFoundException{
+
 		if (!existsWithId(id)) {
-			return errorModel(NOT_FOUND);
+			throw new ModelNotFoundException("Post");
 		}
-		Post postToDelete = dao().get(id);
-		postToDelete.setPostStatus(PostStatus.DELETED);
-		dao.save(postToDelete);
+		PostDTO postToDelete = mapper().map(dao().get(id),PostDTO.class);
+		postToDelete.setPostStatus(PostStatus.DELETED.toString());
+		dao.save(mapper().map(postToDelete,Post.class));
 
 		return postToDelete;
 	}
 	
-	public Post findByTitle(String title){
-		Post model = dao().findOne(dao().createQuery().filter("title", title.replaceAll("_", " ")));
+	public PostDTO findByTitle(String title){
+		PostDTO model = mapper().map(
+				dao().findOne(dao().createQuery().filter("title", title.replaceAll("_", " "))),PostDTO.class);
 
 		if (model == null) {
 			return errorModel(NOT_FOUND);
@@ -42,8 +46,8 @@ public class PostService extends PaginationServiceImpl<Post, PostDAO> {
 	}
 
 	@Override
-	public List<Post> findAllInPage(PaginationDTO settings) {
-		List<Post> foundOnes = super.findAllInPage(settings);
+	public List<PostDTO> findAllInPage(PaginationDTO settings) {
+		List<PostDTO> foundOnes = super.findAllInPage(settings);
 		boolean hasPreviousPage = hasPreviousPage(settings);
 
 		return foundOnes.stream().map(post -> {
@@ -53,12 +57,12 @@ public class PostService extends PaginationServiceImpl<Post, PostDAO> {
 	}
 
 	@Override
-	public List<Post> findAll() {
+	public List<PostDTO> findAll() {
 		return new ArrayList<>();
 	}
 
 	@Override
-	protected boolean isNotUnique(Post model) {
+	protected boolean isNotUnique(PostDTO model) {
 		return false;
 	}
 
@@ -74,5 +78,10 @@ public class PostService extends PaginationServiceImpl<Post, PostDAO> {
 
 	public void setDao(PostDAO dao) {
 		this.dao = dao;
+	}
+
+	@Override
+	public Class<PostDTO> getDTOClass() {
+		return PostDTO.class;
 	}
 }

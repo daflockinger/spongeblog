@@ -3,15 +3,16 @@ package services;
 import com.google.inject.Inject;
 
 import dao.KeywordDAO;
+import dto.KeywordDTO;
 import model.Keyword;
 
-public class KeywordService extends BaseServiceImpl<Keyword, KeywordDAO>{
+public class KeywordService extends BaseServiceImpl<Keyword,KeywordDTO, KeywordDAO>{
 
 	@Inject
 	private KeywordDAO dao;
 	
 	@Override
-	protected boolean isNotUnique(Keyword model) {
+	protected boolean isNotUnique(KeywordDTO model) {
 		return dao().exists(dao().createQuery().filter("name", model.getName()));
 	}
 
@@ -27,5 +28,10 @@ public class KeywordService extends BaseServiceImpl<Keyword, KeywordDAO>{
 
 	public void setDao(KeywordDAO dao){
 		this.dao = dao;
+	}
+
+	@Override
+	public Class<KeywordDTO> getDTOClass() {
+		return KeywordDTO.class;
 	}
 }

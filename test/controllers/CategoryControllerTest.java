@@ -12,12 +12,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import dao.CategoryDAO;
+import dto.CategoryDTO;
 import model.Category;
 import play.libs.Json;
 import play.mvc.Result;
 import services.CategoryService;
+import utils.BlogMapperFactory;
 
-public class CategoryControllerTest extends BaseControllerTest<CategoryController, CategoryService, CategoryDAO, Category> {
+public class CategoryControllerTest extends BaseControllerTest<CategoryController, CategoryService, CategoryDAO, CategoryDTO,Category> {
 
 	private Category testCategory1;
 	private Category insertCategory;
@@ -29,6 +31,7 @@ public class CategoryControllerTest extends BaseControllerTest<CategoryControlle
 		dao = new CategoryDAO();
 		service = new CategoryService();
 		service.setDao(dao);
+		service.setMapperFactory(new BlogMapperFactory());
 		controller = new CategoryController();
 		controller.setService(service);
 
