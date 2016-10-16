@@ -10,5 +10,4 @@ services:
   - mongodb
 
 before_script:
-  - sleep 15
-  - mongo test --eval 'db.createUser({user:"root4", pwd:"flo",roles:[{ role: "readWrite", db: "test" }]});'
+  - sh travisMongoUserAdd.sh
