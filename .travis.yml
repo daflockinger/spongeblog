@@ -8,3 +8,7 @@ script: sbt ++$TRAVIS_SCALA_VERSION test
 
 services:
   - mongodb
+
+before_script:
+  - sleep 15
+  - mongo spongeblog --eval 'db.addUser("root", "flo");'
