@@ -2,20 +2,48 @@ package controllers;
 
 import com.google.inject.Inject;
 
+import dto.CategoryDTO;
+import exceptions.GeneralServiceException;
+import helpers.JsonHelper;
 import model.Category;
+import play.mvc.Controller;
+import play.mvc.Http.RequestBody;
+import play.mvc.Result;
 import services.CategoryService;
 
-public class CategoryController extends BaseController<CategoryService,Category> {
+public class CategoryController extends Controller {
 
 	@Inject
-	private CategoryService service;
-	
-	@Override
-	protected CategoryService service() {
-		return service;
+	private SimpleController<CategoryDTO, Category, CategoryService> simple;
+
+	@Inject
+	protected JsonHelper jsonHelper;
+
+	public Result create() {
+		RequestBody body = request().body();
+		return jsonHelper.getResponse(simple.create(jsonHelper.extractModel(body, CategoryDTO.class)),
+				CategoryDTO.class);
 	}
 
-	public void setService(CategoryService service) {
-		this.service = service;
+	public Result findById(String id) {
+		return jsonHelper.getResponse(simple.findById(id), CategoryDTO.class);
+	}
+
+	public Result findAll() throws GeneralServiceException {
+		return jsonHelper.getResponses(simple.findAll(), CategoryDTO.class);
+	}
+
+	public Result update(String id) {
+		RequestBody body = request().body();
+		return jsonHelper.getResponse(simple.update(jsonHelper.extractModel(body, CategoryDTO.class), id),
+				CategoryDTO.class);
+	}
+
+	public Result delete(String id) {
+		return jsonHelper.getResponse(simple.delete(id), CategoryDTO.class);
+	}
+
+	public void setSimple(SimpleController<CategoryDTO, Category, CategoryService> simple) {
+		this.simple = simple;
 	}
 }

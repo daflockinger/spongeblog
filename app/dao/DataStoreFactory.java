@@ -2,6 +2,7 @@ package dao;
 
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.ValidationExtension;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -19,6 +20,7 @@ public class DataStoreFactory {
 
 		if (dataStore == null) {
 			morphia = new Morphia();
+			new ValidationExtension(morphia);
 			Config config = ConfigFactory.defaultApplication();
 			MongoClient client = new MongoClient(new MongoClientURI(config.getString("morphia.db.uri")));;
 			dataStore = morphia.createDatastore(client, config.getString("morphia.db.name"));

@@ -3,7 +3,7 @@ package dto;
 import model.BaseModel;
 import model.UserStatus;
 
-public class LoginResultDTO  extends BaseModel{
+public class LoginResultDTO  extends BaseDTO{
 	private UserStatus userStatus;
 	private String errorMessage;
 	

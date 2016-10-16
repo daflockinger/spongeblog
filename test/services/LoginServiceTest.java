@@ -14,6 +14,7 @@ import dto.LoginResultDTO;
 import model.User;
 import model.UserStatus;
 import play.test.WithApplication;
+import utils.BlogMapperFactory;
 
 public class LoginServiceTest extends WithApplication{
 	

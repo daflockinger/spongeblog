@@ -4,39 +4,65 @@ import static dto.RestError.NOT_FOUND;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 
 import com.google.inject.Inject;
 
 import dao.PostDAO;
+import dto.PaginationDTO;
+import dto.PostDTO;
+import exceptions.ModelNotFoundException;
 import model.Post;
 import model.PostStatus;
 
-public class PostService extends PaginationServiceImpl<Post, PostDAO>{
+public class PostService extends PaginationServiceImpl<PostDTO,Post, PostDAO> {
 
 	@Inject
 	private PostDAO dao;
-	
+
 	@Override
-	public Post delete(ObjectId id) {
+	public PostDTO delete(ObjectId id) throws ModelNotFoundException{
+
 		if (!existsWithId(id)) {
-			return errorModel(NOT_FOUND);
+			throw new ModelNotFoundException("Post");
 		}
-		Post postToDelete = dao().get(id);
-		postToDelete.setPostStatus(PostStatus.DELETED);
-		dao.save(postToDelete);
+		PostDTO postToDelete = mapper().map(dao().get(id),PostDTO.class);
+		postToDelete.setPostStatus(PostStatus.DELETED.toString());
+		dao.save(mapper().map(postToDelete,Post.class));
 
 		return postToDelete;
 	}
+	
+	public PostDTO findByTitle(String title){
+		PostDTO model = mapper().map(
+				dao().findOne(dao().createQuery().filter("title", title.replaceAll("_", " "))),PostDTO.class);
+
+		if (model == null) {
+			return errorModel(NOT_FOUND);
+		}
+		return model;
+	}
 
 	@Override
-	public List<Post> findAll(){
+	public List<PostDTO> findAllInPage(PaginationDTO settings) {
+		List<PostDTO> foundOnes = super.findAllInPage(settings);
+		boolean hasPreviousPage = hasPreviousPage(settings);
+
+		return foundOnes.stream().map(post -> {
+			post.setHasPreviousPage(hasPreviousPage);
+			return post;
+		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<PostDTO> findAll() {
 		return new ArrayList<>();
 	}
-	
+
 	@Override
-	protected boolean isNotUnique(Post model) {
+	protected boolean isNotUnique(PostDTO model) {
 		return false;
 	}
 
@@ -49,8 +75,13 @@ public class PostService extends PaginationServiceImpl<Post, PostDAO>{
 	protected PostDAO dao() {
 		return dao;
 	}
-	
-	public void setDao(PostDAO dao){
+
+	public void setDao(PostDAO dao) {
 		this.dao = dao;
+	}
+
+	@Override
+	public Class<PostDTO> getDTOClass() {
+		return PostDTO.class;
 	}
 }
