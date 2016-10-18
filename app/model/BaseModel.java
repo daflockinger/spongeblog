@@ -12,6 +12,7 @@ import utils.ObjectIdSerializer;
 public class BaseModel{
 		
 	@Id
+	@JsonSerialize(using = ObjectIdSerializer.class)
 	private ObjectId id ;
 	
 	
